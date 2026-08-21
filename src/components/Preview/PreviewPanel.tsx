@@ -3,6 +3,7 @@ import { useResumeStore } from '../../store/resumeStore';
 import ModernTemplate from './templates/ModernTemplate';
 import ClassicTemplate from './templates/ClassicTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
+import SectionSettings from './SectionSettings';
 import { exportToPdf } from '../../utils/pdfGenerator';
 
 const templates = [
@@ -34,8 +35,9 @@ function PreviewPanel() {
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900">Предпросмотр</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mr-4">Предпросмотр</h2>
           <div className="flex items-center space-x-3">
+            <SectionSettings />
             {/* Переключатель шаблонов */}
             <div className="relative">
               <button

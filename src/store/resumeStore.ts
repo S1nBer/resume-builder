@@ -1,18 +1,19 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import type {
-  Certification,
-  Education,
-  Experience,
-  Language,
-  PersonalInfo,
-  Project,
   Resume,
+  PersonalInfo,
+  Experience,
+  Education,
   Skill,
+  Language,
+  Certification,
+  Project,
+  SectionOrder,
 } from '../types/resume';
 
 // Функция для генерации уникальных ID
-const generateId = () => Math.random().toString(36).substr(2, 9);
+const generateId = () => Math.random().toString(36).slice(2, 11);
 
 // Начальное состояние
 const initialState: Resume = {
@@ -37,9 +38,20 @@ const initialState: Resume = {
   projects: [],
 };
 
+const defaultSectionOrder: SectionOrder[] = [
+  { id: 'summary', title: 'О себе', enabled: true },
+  { id: 'experience', title: 'Опыт работы', enabled: true },
+  { id: 'education', title: 'Образование', enabled: true },
+  { id: 'skills', title: 'Навыки', enabled: true },
+  { id: 'languages', title: 'Языки', enabled: true },
+  { id: 'certifications', title: 'Сертификаты', enabled: true },
+  { id: 'projects', title: 'Проекты', enabled: true },
+];
+
 interface ResumeStore {
   resume: Resume;
   selectedTemplate: string;
+  sectionOrder: SectionOrder[];
 
   // Personal Info
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
@@ -78,6 +90,10 @@ interface ResumeStore {
   // Template
   setTemplate: (templateId: string) => void;
 
+  // Section Order
+  updateSectionOrder: (newOrder: SectionOrder[]) => void;
+  toggleSection: (sectionId: string) => void;
+
   // Reset
   resetResume: () => void;
   loadResume: (resume: Resume) => void;
@@ -88,6 +104,7 @@ export const useResumeStore = create<ResumeStore>()(
     (set) => ({
       resume: initialState,
       selectedTemplate: 'modern',
+      sectionOrder: defaultSectionOrder,
 
       updatePersonalInfo: (info) =>
         set((state) => ({
@@ -285,7 +302,20 @@ export const useResumeStore = create<ResumeStore>()(
 
       setTemplate: (templateId) => set({ selectedTemplate: templateId }),
 
-      resetResume: () => set({ resume: initialState }),
+      updateSectionOrder: (newOrder) => set({ sectionOrder: newOrder }),
+
+      toggleSection: (sectionId) =>
+        set((state) => ({
+          sectionOrder: state.sectionOrder.map((section) =>
+            section.id === sectionId ? { ...section, enabled: !section.enabled } : section,
+          ),
+        })),
+
+      resetResume: () =>
+        set({
+          resume: initialState,
+          sectionOrder: defaultSectionOrder,
+        }),
 
       loadResume: (resume) => set({ resume }),
     }),
