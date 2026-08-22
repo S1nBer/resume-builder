@@ -1,12 +1,18 @@
 import { useRef, type ChangeEvent } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
+import { isValidEmail, isValidPhone } from '../../utils/validators';
 import FormField from '../common/FormField';
 import Input from '../common/Input';
+import ErrorList from '../common/ErrorList';
 
 function PersonalInfoForm() {
   const personalInfo = useResumeStore((state) => state.resume.personalInfo);
   const updatePersonalInfo = useResumeStore((state) => state.updatePersonalInfo);
+  const errors = useResumeStore((state) => state.errors);
+  const setErrors = useResumeStore((state) => state.setErrors);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const personalErrors = errors.personalInfo || [];
 
   const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -17,6 +23,36 @@ function PersonalInfoForm() {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  const validateField = (field: string, value: string) => {
+    const newErrors: string[] = [];
+
+    switch (field) {
+      case 'email':
+        if (value && !isValidEmail(value)) {
+          newErrors.push('Некорректный email');
+        }
+        break;
+      case 'phone':
+        if (value && !isValidPhone(value)) {
+          newErrors.push('Некорректный номер телефона');
+        }
+        break;
+    }
+
+    const updatedErrors = { ...errors };
+    if (newErrors.length > 0) {
+      updatedErrors.personalInfo = [...new Set([...personalErrors, ...newErrors])];
+    } else {
+      updatedErrors.personalInfo = personalErrors.filter((err) => !err.includes(field));
+    }
+
+    if (updatedErrors.personalInfo?.length === 0) {
+      delete updatedErrors.personalInfo;
+    }
+
+    setErrors(updatedErrors);
   };
 
   return (
@@ -74,6 +110,7 @@ function PersonalInfoForm() {
             value={personalInfo.fullName}
             onChange={(e) => updatePersonalInfo({ fullName: e.target.value })}
             placeholder="Иван Иванов"
+            className={personalErrors.some((err) => err.includes('ФИО')) ? 'border-red-500' : ''}
           />
         </FormField>
 
@@ -82,6 +119,9 @@ function PersonalInfoForm() {
             value={personalInfo.position}
             onChange={(e) => updatePersonalInfo({ position: e.target.value })}
             placeholder="Frontend Developer"
+            className={
+              personalErrors.some((err) => err.includes('должность')) ? 'border-red-500' : ''
+            }
           />
         </FormField>
 
@@ -89,8 +129,12 @@ function PersonalInfoForm() {
           <Input
             type="email"
             value={personalInfo.email}
-            onChange={(e) => updatePersonalInfo({ email: e.target.value })}
+            onChange={(e) => {
+              updatePersonalInfo({ email: e.target.value });
+              validateField('email', e.target.value);
+            }}
             placeholder="ivan@example.com"
+            className={personalErrors.some((err) => err.includes('email')) ? 'border-red-500' : ''}
           />
         </FormField>
 
@@ -98,8 +142,14 @@ function PersonalInfoForm() {
           <Input
             type="tel"
             value={personalInfo.phone}
-            onChange={(e) => updatePersonalInfo({ phone: e.target.value })}
+            onChange={(e) => {
+              updatePersonalInfo({ phone: e.target.value });
+              validateField('phone', e.target.value);
+            }}
             placeholder="+7 (999) 123-45-67"
+            className={
+              personalErrors.some((err) => err.includes('телефон')) ? 'border-red-500' : ''
+            }
           />
         </FormField>
 
@@ -146,6 +196,8 @@ function PersonalInfoForm() {
           />
         </FormField>
       </div>
+
+      {personalErrors.length > 0 && <ErrorList errors={personalErrors} />}
     </div>
   );
 }

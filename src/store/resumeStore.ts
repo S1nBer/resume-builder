@@ -11,6 +11,7 @@ import type {
   Project,
   SectionOrder,
 } from '../types/resume';
+import type { ValidationErrors } from '../utils/validators';
 
 // Функция для генерации уникальных ID
 const generateId = () => Math.random().toString(36).slice(2, 11);
@@ -52,6 +53,7 @@ interface ResumeStore {
   resume: Resume;
   selectedTemplate: string;
   sectionOrder: SectionOrder[];
+  errors: ValidationErrors;
 
   // Personal Info
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
@@ -97,6 +99,10 @@ interface ResumeStore {
   // Reset
   resetResume: () => void;
   loadResume: (resume: Resume) => void;
+
+  // Validation
+  setErrors: (errors: ValidationErrors) => void;
+  clearErrors: () => void;
 }
 
 export const useResumeStore = create<ResumeStore>()(
@@ -105,6 +111,7 @@ export const useResumeStore = create<ResumeStore>()(
       resume: initialState,
       selectedTemplate: 'modern',
       sectionOrder: defaultSectionOrder,
+      errors: {},
 
       updatePersonalInfo: (info) =>
         set((state) => ({
@@ -318,9 +325,18 @@ export const useResumeStore = create<ResumeStore>()(
         }),
 
       loadResume: (resume) => set({ resume }),
+
+      setErrors: (errors) => set({ errors }),
+      clearErrors: () => set({ errors: {} }),
     }),
     {
       name: 'resume-storage',
+      partialize: (state) => ({
+        resume: state.resume,
+        selectedTemplate: state.selectedTemplate,
+        sectionOrder: state.sectionOrder,
+        // Не сохраняем ошибки в localStorage
+      }),
     },
   ),
 );
