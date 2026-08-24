@@ -34,7 +34,6 @@ export default [
       ...js.configs.recommended.rules,
       ...tseslint.configs.recommended.rules,
       // Стиль
-      indent: ['error', 2, { SwitchCase: 1 }],
       quotes: ['error', 'single'],
       semi: ['error', 'always'],
       'comma-dangle': ['error', 'always-multiline'],

@@ -11,6 +11,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
     personalInfo,
     summary,
     skills,
+    skillGroups,
     experience,
     education,
     languages,
@@ -95,22 +96,47 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
         );
       case 'skills':
         return (
-          skills.length > 0 &&
+          (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-8">
               <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
                 Навыки
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span
-                    key={skill.id}
-                    className="px-3 py-1 bg-gray-50 text-gray-700 rounded text-sm border border-gray-200"
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
+
+              {/* Простые навыки */}
+              {skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {skills.map((skill) => (
+                    <span
+                      key={skill.id}
+                      className="px-3 py-1 bg-gray-50 text-gray-700 rounded text-sm border border-gray-200"
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Группы навыков */}
+              {skillGroups.length > 0 && (
+                <div className="space-y-4">
+                  {skillGroups.map((group) => (
+                    <div key={group.id} className="border-t border-gray-100 pt-3">
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">{group.name}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {group.skills.map((skill) => (
+                          <span
+                            key={skill.id}
+                            className="px-3 py-1 bg-gray-50 text-gray-600 rounded text-sm"
+                          >
+                            {skill.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )
         );

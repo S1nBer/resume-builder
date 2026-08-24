@@ -11,6 +11,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
     personalInfo,
     summary,
     skills,
+    skillGroups,
     experience,
     education,
     languages,
@@ -98,20 +99,45 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
         );
       case 'skills':
         return (
-          skills.length > 0 &&
+          (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-8">
               <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
                 Навыки
               </h2>
-              <div className="grid grid-cols-2 gap-2">
-                {skills.map((skill) => (
-                  <div key={skill.id} className="flex items-center">
-                    <span className="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
-                    <span className="text-gray-700">{skill.name}</span>
-                  </div>
-                ))}
-              </div>
+
+              {/* Простые навыки */}
+              {skills.length > 0 && (
+                <div className="grid grid-cols-2 gap-2 mb-4">
+                  {skills.map((skill) => (
+                    <div key={skill.id} className="flex items-center">
+                      <span className="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
+                      <span className="text-gray-700">{skill.name}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Группы навыков */}
+              {skillGroups.length > 0 && (
+                <div className="space-y-4">
+                  {skillGroups.map((group) => (
+                    <div key={group.id}>
+                      <h4 className="text-md font-semibold text-gray-900 mb-2 uppercase text-sm tracking-wide">
+                        {group.name}
+                      </h4>
+                      <div className="grid grid-cols-2 gap-2">
+                        {group.skills.map((skill) => (
+                          <div key={skill.id} className="flex items-center">
+                            <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                            <span className="text-gray-700">{skill.name}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )
         );

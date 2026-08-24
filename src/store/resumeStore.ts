@@ -32,6 +32,7 @@ const initialState: Resume = {
   },
   summary: '',
   skills: [],
+  skillGroups: [],
   experience: [],
   education: [],
   languages: [],
@@ -63,6 +64,14 @@ interface ResumeStore {
   addSkill: (skill: Omit<Skill, 'id'>) => void;
   updateSkill: (id: string, skill: Partial<Skill>) => void;
   removeSkill: (id: string) => void;
+
+  // Skill Groups
+  addSkillGroup: (name: string) => void;
+  updateSkillGroup: (id: string, name: string) => void;
+  removeSkillGroup: (id: string) => void;
+  addSkillToGroup: (groupId: string, skillName: string) => void;
+  updateSkillInGroup: (groupId: string, skillId: string, name: string) => void;
+  removeSkillFromGroup: (groupId: string, skillId: string) => void;
 
   // Experience
   addExperience: (experience?: Partial<Experience>) => void;
@@ -96,13 +105,13 @@ interface ResumeStore {
   updateSectionOrder: (newOrder: SectionOrder[]) => void;
   toggleSection: (sectionId: string) => void;
 
-  // Reset
-  resetResume: () => void;
-  loadResume: (resume: Resume) => void;
-
   // Validation
   setErrors: (errors: ValidationErrors) => void;
   clearErrors: () => void;
+
+  // Reset
+  resetResume: () => void;
+  loadResume: (resume: Resume) => void;
 }
 
 export const useResumeStore = create<ResumeStore>()(
@@ -147,6 +156,86 @@ export const useResumeStore = create<ResumeStore>()(
           resume: {
             ...state.resume,
             skills: state.resume.skills.filter((s) => s.id !== id),
+          },
+        })),
+
+      addSkillGroup: (name) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: [
+              ...state.resume.skillGroups,
+              {
+                id: generateId(),
+                name,
+                skills: [],
+              },
+            ],
+          },
+        })),
+
+      updateSkillGroup: (id, name) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: state.resume.skillGroups.map((group) =>
+              group.id === id ? { ...group, name } : group,
+            ),
+          },
+        })),
+
+      removeSkillGroup: (id) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: state.resume.skillGroups.filter((group) => group.id !== id),
+          },
+        })),
+
+      addSkillToGroup: (groupId, skillName) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: state.resume.skillGroups.map((group) =>
+              group.id === groupId
+                ? {
+                    ...group,
+                    skills: [...group.skills, { id: generateId(), name: skillName }],
+                  }
+                : group,
+            ),
+          },
+        })),
+
+      updateSkillInGroup: (groupId, skillId, name) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: state.resume.skillGroups.map((group) =>
+              group.id === groupId
+                ? {
+                    ...group,
+                    skills: group.skills.map((skill) =>
+                      skill.id === skillId ? { ...skill, name } : skill,
+                    ),
+                  }
+                : group,
+            ),
+          },
+        })),
+
+      removeSkillFromGroup: (groupId, skillId) =>
+        set((state) => ({
+          resume: {
+            ...state.resume,
+            skillGroups: state.resume.skillGroups.map((group) =>
+              group.id === groupId
+                ? {
+                    ...group,
+                    skills: group.skills.filter((skill) => skill.id !== skillId),
+                  }
+                : group,
+            ),
           },
         })),
 
@@ -318,16 +407,17 @@ export const useResumeStore = create<ResumeStore>()(
           ),
         })),
 
+      setErrors: (errors) => set({ errors }),
+      clearErrors: () => set({ errors: {} }),
+
       resetResume: () =>
         set({
           resume: initialState,
           sectionOrder: defaultSectionOrder,
+          errors: {},
         }),
 
       loadResume: (resume) => set({ resume }),
-
-      setErrors: (errors) => set({ errors }),
-      clearErrors: () => set({ errors: {} }),
     }),
     {
       name: 'resume-storage',
@@ -335,7 +425,6 @@ export const useResumeStore = create<ResumeStore>()(
         resume: state.resume,
         selectedTemplate: state.selectedTemplate,
         sectionOrder: state.sectionOrder,
-        // Не сохраняем ошибки в localStorage
       }),
     },
   ),

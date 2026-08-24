@@ -16,8 +16,13 @@ export interface PersonalInfo {
 export interface Skill {
   id: string;
   name: string;
-  level: 'beginner' | 'intermediate' | 'advanced' | 'expert';
   category?: string;
+}
+
+export interface SkillGroup {
+  id: string;
+  name: string;
+  skills: Skill[];
 }
 
 export interface Experience {
@@ -71,6 +76,7 @@ export interface Resume {
   personalInfo: PersonalInfo;
   summary: string;
   skills: Skill[];
+  skillGroups: SkillGroup[];
   experience: Experience[];
   education: Education[];
   languages: Language[];

@@ -11,6 +11,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
     personalInfo,
     summary,
     skills,
+    skillGroups,
     experience,
     education,
     languages,
@@ -98,22 +99,47 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
         );
       case 'skills':
         return (
-          skills.length > 0 &&
+          (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-6">
               <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
                 Навыки
               </h2>
-              <div className="flex flex-wrap gap-2">
-                {skills.map((skill) => (
-                  <span
-                    key={skill.id}
-                    className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
-                  >
-                    {skill.name}
-                  </span>
-                ))}
-              </div>
+
+              {/* Простые навыки */}
+              {skills.length > 0 && (
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {skills.map((skill) => (
+                    <span
+                      key={skill.id}
+                      className="px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                    >
+                      {skill.name}
+                    </span>
+                  ))}
+                </div>
+              )}
+
+              {/* Группы навыков */}
+              {skillGroups.length > 0 && (
+                <div className="space-y-3">
+                  {skillGroups.map((group) => (
+                    <div key={group.id}>
+                      <h4 className="text-sm font-medium text-gray-900 mb-2">{group.name}</h4>
+                      <div className="flex flex-wrap gap-2">
+                        {group.skills.map((skill) => (
+                          <span
+                            key={skill.id}
+                            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+                          >
+                            {skill.name}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
             </section>
           )
         );
