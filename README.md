@@ -28,6 +28,10 @@
 - **ESLint** — линтер
 - **Prettier** — форматирование кода
 
+## 🌐 Демо
+
+Открыть проект: [https://s1nber.github.io/resume-builder/](https://s1nber.github.io/resume-builder/)
+
 ## 📦 Установка
 
 ```bash
