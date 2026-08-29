@@ -55,6 +55,7 @@ interface ResumeStore {
   selectedTemplate: string;
   sectionOrder: SectionOrder[];
   errors: ValidationErrors;
+  accentColor: string;
 
   // Personal Info
   updatePersonalInfo: (info: Partial<PersonalInfo>) => void;
@@ -100,6 +101,7 @@ interface ResumeStore {
 
   // Template
   setTemplate: (templateId: string) => void;
+  setAccentColor: (color: string) => void;
 
   // Section Order
   updateSectionOrder: (newOrder: SectionOrder[]) => void;
@@ -121,6 +123,7 @@ export const useResumeStore = create<ResumeStore>()(
       selectedTemplate: 'modern',
       sectionOrder: defaultSectionOrder,
       errors: {},
+      accentColor: '#2563eb',
 
       updatePersonalInfo: (info) =>
         set((state) => ({
@@ -397,6 +400,7 @@ export const useResumeStore = create<ResumeStore>()(
         })),
 
       setTemplate: (templateId) => set({ selectedTemplate: templateId }),
+      setAccentColor: (color) => set({ accentColor: color }),
 
       updateSectionOrder: (newOrder) => set({ sectionOrder: newOrder }),
 
@@ -425,6 +429,7 @@ export const useResumeStore = create<ResumeStore>()(
         resume: state.resume,
         selectedTemplate: state.selectedTemplate,
         sectionOrder: state.sectionOrder,
+        accentColor: state.accentColor,
       }),
     },
   ),

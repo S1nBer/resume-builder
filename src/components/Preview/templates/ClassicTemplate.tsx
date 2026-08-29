@@ -7,6 +7,7 @@ interface ClassicTemplateProps {
 
 function ClassicTemplate({ resume }: ClassicTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
+  const accentColor = useResumeStore((state) => state.accentColor);
   const {
     personalInfo,
     summary,
@@ -31,7 +32,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           summary &&
           isSectionEnabled('summary') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 О себе
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
@@ -43,7 +47,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           experience.length > 0 &&
           isSectionEnabled('experience') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Опыт работы
               </h2>
               <div className="space-y-6">
@@ -75,7 +82,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           education.length > 0 &&
           isSectionEnabled('education') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Образование
               </h2>
               <div className="space-y-4">
@@ -102,34 +112,44 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Навыки
               </h2>
 
-              {/* Простые навыки */}
               {skills.length > 0 && (
                 <div className="grid grid-cols-2 gap-2 mb-4">
                   {skills.map((skill) => (
                     <div key={skill.id} className="flex items-center">
-                      <span className="w-2 h-2 bg-gray-600 rounded-full mr-2"></span>
+                      <span
+                        className="w-2 h-2 rounded-full mr-2"
+                        style={{ backgroundColor: accentColor }}
+                      ></span>
                       <span className="text-gray-700">{skill.name}</span>
                     </div>
                   ))}
                 </div>
               )}
 
-              {/* Группы навыков */}
               {skillGroups.length > 0 && (
                 <div className="space-y-4">
                   {skillGroups.map((group) => (
                     <div key={group.id}>
-                      <h4 className="text-md font-semibold text-gray-900 mb-2 uppercase text-sm tracking-wide">
+                      <h4
+                        className="text-md font-semibold text-gray-900 mb-2 uppercase text-sm tracking-wide"
+                        style={{ color: accentColor }}
+                      >
                         {group.name}
                       </h4>
                       <div className="grid grid-cols-2 gap-2">
                         {group.skills.map((skill) => (
                           <div key={skill.id} className="flex items-center">
-                            <span className="w-2 h-2 bg-blue-600 rounded-full mr-2"></span>
+                            <span
+                              className="w-2 h-2 rounded-full mr-2"
+                              style={{ backgroundColor: accentColor }}
+                            ></span>
                             <span className="text-gray-700">{skill.name}</span>
                           </div>
                         ))}
@@ -146,7 +166,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           languages.length > 0 &&
           isSectionEnabled('languages') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Языки
               </h2>
               <div className="space-y-2">
@@ -165,7 +188,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           certifications.length > 0 &&
           isSectionEnabled('certifications') && (
             <section className="mb-8">
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Сертификаты
               </h2>
               <div className="space-y-3">
@@ -187,7 +213,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
           projects.length > 0 &&
           isSectionEnabled('projects') && (
             <section>
-              <h2 className="text-xl font-bold text-gray-900 uppercase border-b-2 border-gray-400 pb-2 mb-4">
+              <h2
+                className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
+                style={{ borderColor: accentColor }}
+              >
                 Проекты
               </h2>
               <div className="space-y-4">
@@ -218,7 +247,9 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
         <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-wide">
           {personalInfo.fullName || 'Ваше имя'}
         </h1>
-        <p className="text-xl text-gray-700 mt-2">{personalInfo.position || 'Должность'}</p>
+        <p className="text-xl mt-2" style={{ color: accentColor }}>
+          {personalInfo.position || 'Должность'}
+        </p>
 
         <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
           {personalInfo.email && <span>{personalInfo.email}</span>}
@@ -228,7 +259,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
 
         {personalInfo.photo && (
           <div className="mt-4 flex justify-center">
-            <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-gray-300">
+            <div
+              className="w-32 h-32 rounded-full overflow-hidden border-4"
+              style={{ borderColor: accentColor }}
+            >
               <img
                 src={personalInfo.photo}
                 alt={personalInfo.fullName}

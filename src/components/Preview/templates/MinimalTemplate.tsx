@@ -7,6 +7,7 @@ interface MinimalTemplateProps {
 
 function MinimalTemplate({ resume }: MinimalTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
+  const accentColor = useResumeStore((state) => state.accentColor);
   const {
     personalInfo,
     summary,
@@ -31,7 +32,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           summary &&
           isSectionEnabled('summary') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
+                style={{ color: accentColor }}
+              >
                 О себе
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
@@ -43,7 +47,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           experience.length > 0 &&
           isSectionEnabled('experience') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4"
+                style={{ color: accentColor }}
+              >
                 Опыт работы
               </h2>
               <div className="space-y-6">
@@ -72,7 +79,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           education.length > 0 &&
           isSectionEnabled('education') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4"
+                style={{ color: accentColor }}
+              >
                 Образование
               </h2>
               <div className="space-y-4">
@@ -99,17 +109,20 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
+                style={{ color: accentColor }}
+              >
                 Навыки
               </h2>
 
-              {/* Простые навыки */}
               {skills.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {skills.map((skill) => (
                     <span
                       key={skill.id}
-                      className="px-3 py-1 bg-gray-50 text-gray-700 rounded text-sm border border-gray-200"
+                      className="px-3 py-1 bg-gray-50 text-gray-700 rounded text-sm border"
+                      style={{ borderColor: `${accentColor}30` }}
                     >
                       {skill.name}
                     </span>
@@ -117,17 +130,21 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 </div>
               )}
 
-              {/* Группы навыков */}
               {skillGroups.length > 0 && (
                 <div className="space-y-4">
                   {skillGroups.map((group) => (
-                    <div key={group.id} className="border-t border-gray-100 pt-3">
+                    <div
+                      key={group.id}
+                      className="border-t pt-3"
+                      style={{ borderColor: `${accentColor}20` }}
+                    >
                       <h4 className="text-sm font-medium text-gray-900 mb-2">{group.name}</h4>
                       <div className="flex flex-wrap gap-2">
                         {group.skills.map((skill) => (
                           <span
                             key={skill.id}
                             className="px-3 py-1 bg-gray-50 text-gray-600 rounded text-sm"
+                            style={{ border: `1px solid ${accentColor}20` }}
                           >
                             {skill.name}
                           </span>
@@ -145,7 +162,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           languages.length > 0 &&
           isSectionEnabled('languages') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
+                style={{ color: accentColor }}
+              >
                 Языки
               </h2>
               <div className="flex flex-wrap gap-4">
@@ -164,7 +184,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           certifications.length > 0 &&
           isSectionEnabled('certifications') && (
             <section className="mb-8">
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
+                style={{ color: accentColor }}
+              >
                 Сертификаты
               </h2>
               <div className="space-y-2">
@@ -186,7 +209,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           projects.length > 0 &&
           isSectionEnabled('projects') && (
             <section>
-              <h2 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">
+              <h2
+                className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
+                style={{ color: accentColor }}
+              >
                 Проекты
               </h2>
               <div className="space-y-4">
@@ -216,7 +242,10 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
       <header className="mb-8">
         <div className="flex items-center gap-6">
           {personalInfo.photo && (
-            <div className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0">
+            <div
+              className="w-20 h-20 rounded-lg overflow-hidden flex-shrink-0"
+              style={{ border: `2px solid ${accentColor}` }}
+            >
               <img
                 src={personalInfo.photo}
                 alt={personalInfo.fullName}
@@ -228,7 +257,9 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
             <h1 className="text-3xl font-light text-gray-900">
               {personalInfo.fullName || 'Ваше имя'}
             </h1>
-            <p className="text-lg text-gray-600 mt-1">{personalInfo.position || 'Должность'}</p>
+            <p className="text-lg mt-1" style={{ color: accentColor }}>
+              {personalInfo.position || 'Должность'}
+            </p>
           </div>
         </div>
 
@@ -241,7 +272,8 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
               href={personalInfo.website}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-gray-600 hover:text-gray-900 underline"
+              style={{ color: accentColor }}
+              className="hover:opacity-80"
             >
               {personalInfo.website}
             </a>
@@ -249,7 +281,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
         </div>
       </header>
 
-      <div className="border-t border-gray-200 pt-8">
+      <div className="border-t pt-8" style={{ borderColor: `${accentColor}30` }}>
         {/* Секции в порядке, заданном пользователем */}
         {sectionOrder.map((section) => (
           <div key={section.id}>{renderSection(section.id)}</div>

@@ -4,6 +4,7 @@ import ModernTemplate from './templates/ModernTemplate';
 import ClassicTemplate from './templates/ClassicTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
 import SectionSettings from './SectionSettings';
+import ColorPicker from './ColorPicker';
 import { exportToPdf } from '../../utils/pdfGenerator';
 
 const templates = [
@@ -34,18 +35,19 @@ function PreviewPanel() {
   return (
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-        <div className="flex justify-between items-center">
-          <h2 className="text-lg font-semibold text-gray-900 mr-4">Предпросмотр</h2>
-          <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <h2 className="text-lg font-semibold text-gray-900 mr-auto">Предпросмотр</h2>
+          <div className="flex items-center gap-2 flex-wrap">
             <SectionSettings />
+            <ColorPicker />
             {/* Переключатель шаблонов */}
             <div className="relative">
               <button
                 type="button"
                 onClick={() => setShowTemplateSelector(!showTemplateSelector)}
-                className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors"
+                className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors whitespace-nowrap"
               >
-                Шаблон: {templates.find((t) => t.id === selectedTemplate)?.name}
+                {templates.find((t) => t.id === selectedTemplate)?.name}
               </button>
               {showTemplateSelector && (
                 <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-md shadow-lg z-10">
@@ -72,9 +74,9 @@ function PreviewPanel() {
             <button
               type="button"
               onClick={handleExportPdf}
-              className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors"
+              className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
-              Скачать PDF
+              PDF
             </button>
           </div>
         </div>

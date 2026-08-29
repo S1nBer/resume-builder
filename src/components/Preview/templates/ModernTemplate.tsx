@@ -7,6 +7,7 @@ interface ModernTemplateProps {
 
 function ModernTemplate({ resume }: ModernTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
+  const accentColor = useResumeStore((state) => state.accentColor);
   const {
     personalInfo,
     summary,
@@ -31,7 +32,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           summary &&
           isSectionEnabled('summary') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 О себе
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
@@ -43,7 +47,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           experience.length > 0 &&
           isSectionEnabled('experience') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Опыт работы
               </h2>
               <div className="space-y-4">
@@ -74,7 +81,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           education.length > 0 &&
           isSectionEnabled('education') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Образование
               </h2>
               <div className="space-y-4">
@@ -102,11 +112,13 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           (skills.length > 0 || skillGroups.length > 0) &&
           isSectionEnabled('skills') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Навыки
               </h2>
 
-              {/* Простые навыки */}
               {skills.length > 0 && (
                 <div className="flex flex-wrap gap-2 mb-4">
                   {skills.map((skill) => (
@@ -120,7 +132,6 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 </div>
               )}
 
-              {/* Группы навыков */}
               {skillGroups.length > 0 && (
                 <div className="space-y-3">
                   {skillGroups.map((group) => (
@@ -130,7 +141,11 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                         {group.skills.map((skill) => (
                           <span
                             key={skill.id}
-                            className="px-3 py-1 bg-blue-50 text-blue-700 rounded-full text-sm"
+                            className="px-3 py-1 rounded-full text-sm"
+                            style={{
+                              backgroundColor: `${accentColor}10`,
+                              color: accentColor,
+                            }}
                           >
                             {skill.name}
                           </span>
@@ -148,7 +163,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           languages.length > 0 &&
           isSectionEnabled('languages') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Языки
               </h2>
               <div className="space-y-2">
@@ -167,7 +185,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           certifications.length > 0 &&
           isSectionEnabled('certifications') && (
             <section className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Сертификаты
               </h2>
               <div className="space-y-2">
@@ -188,7 +209,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           projects.length > 0 &&
           isSectionEnabled('projects') && (
             <section>
-              <h2 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2 border-blue-600">
+              <h2
+                className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
+                style={{ borderColor: accentColor }}
+              >
                 Проекты
               </h2>
               <div className="space-y-4">
@@ -224,7 +248,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
       {/* Шапка с фото и контактами */}
       <header className="flex items-start space-x-6 mb-6">
         {personalInfo.photo && (
-          <div className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 border-2 border-gray-200">
+          <div
+            className="w-32 h-32 rounded-full overflow-hidden flex-shrink-0 border-2"
+            style={{ borderColor: accentColor }}
+          >
             <img
               src={personalInfo.photo}
               alt={personalInfo.fullName}
@@ -237,7 +264,9 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           <h1 className="text-3xl font-bold text-gray-900">
             {personalInfo.fullName || 'Ваше имя'}
           </h1>
-          <p className="text-xl text-blue-600 mt-1">{personalInfo.position || 'Должность'}</p>
+          <p className="text-xl mt-1" style={{ color: accentColor }}>
+            {personalInfo.position || 'Должность'}
+          </p>
 
           <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
             {personalInfo.email && <span>{personalInfo.email}</span>}
@@ -251,7 +280,8 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 href={personalInfo.website}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
+                style={{ color: accentColor }}
+                className="hover:opacity-80"
               >
                 {personalInfo.website}
               </a>
@@ -261,7 +291,8 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 href={personalInfo.linkedin}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
+                style={{ color: accentColor }}
+                className="hover:opacity-80"
               >
                 LinkedIn
               </a>
@@ -271,7 +302,8 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 href={personalInfo.github}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-blue-600 hover:text-blue-800"
+                style={{ color: accentColor }}
+                className="hover:opacity-80"
               >
                 GitHub
               </a>
