@@ -1,4 +1,4 @@
-import { useRef, type ChangeEvent } from 'react';
+import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
 import { isValidEmail, isValidPhone } from '../../utils/validators';
 import FormField from '../common/FormField';
@@ -11,17 +11,43 @@ function PersonalInfoForm() {
   const errors = useResumeStore((state) => state.errors);
   const setErrors = useResumeStore((state) => state.setErrors);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isDragging, setIsDragging] = useState(false);
 
   const personalErrors = errors.personalInfo || [];
 
-  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
+  const handleFile = (file: File) => {
+    if (file && file.type.startsWith('image/')) {
       const reader = new FileReader();
       reader.onloadend = () => {
         updatePersonalInfo({ photo: reader.result as string });
       };
       reader.readAsDataURL(file);
+    }
+  };
+
+  const handlePhotoChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      handleFile(file);
+    }
+  };
+
+  const handleDragOver = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(true);
+  };
+
+  const handleDragLeave = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+  };
+
+  const handleDrop = (e: DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragging(false);
+    const file = e.dataTransfer.files?.[0];
+    if (file) {
+      handleFile(file);
     }
   };
 
@@ -59,13 +85,27 @@ function PersonalInfoForm() {
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-900">Личная информация</h2>
 
-      {/* Фото */}
-      <div className="flex items-center space-x-4">
-        <div className="w-24 h-24 rounded-full bg-gray-200 overflow-hidden flex-shrink-0">
+      {/* Фото с drag-and-drop */}
+      <div
+        onDragOver={handleDragOver}
+        onDragLeave={handleDragLeave}
+        onDrop={handleDrop}
+        onClick={() => fileInputRef.current?.click()}
+        className={`flex items-center space-x-4 p-4 rounded-lg border-2 border-dashed cursor-pointer transition-colors ${
+          isDragging
+            ? 'border-blue-500 bg-blue-50'
+            : 'border-gray-300 hover:border-gray-400 hover:bg-gray-50'
+        }`}
+      >
+        <div
+          className={`w-24 h-24 rounded-full overflow-hidden flex-shrink-0 transition-all ${
+            isDragging ? 'ring-4 ring-blue-300' : 'ring-2 ring-gray-200'
+          }`}
+        >
           {personalInfo.photo ? (
             <img src={personalInfo.photo} alt="Фото" className="w-full h-full object-cover" />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-400">
+            <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
               <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
@@ -77,31 +117,35 @@ function PersonalInfoForm() {
             </div>
           )}
         </div>
-        <div>
-          <button
-            type="button"
-            onClick={() => fileInputRef.current?.click()}
-            className="px-4 py-2 bg-gray-100 text-gray-700 rounded-md text-sm hover:bg-gray-200"
-          >
-            Загрузить фото
-          </button>
+
+        <div className="flex-1">
+          <p className="text-sm font-medium text-gray-700">
+            {isDragging ? 'Отпустите файл для загрузки' : 'Перетащите фото сюда'}
+          </p>
+          <p className="text-xs text-gray-500 mt-1">или нажмите для выбора файла</p>
+          <p className="text-xs text-gray-400 mt-1">PNG, JPG или SVG, до 5 МБ</p>
+
           {personalInfo.photo && (
             <button
               type="button"
-              onClick={() => updatePersonalInfo({ photo: null })}
-              className="ml-2 px-4 py-2 bg-red-100 text-red-700 rounded-md text-sm hover:bg-red-200"
+              onClick={(e) => {
+                e.stopPropagation();
+                updatePersonalInfo({ photo: null });
+              }}
+              className="mt-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-md text-xs hover:bg-red-200 transition-colors"
             >
-              Удалить
+              Удалить фото
             </button>
           )}
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            onChange={handlePhotoChange}
-            className="hidden"
-          />
         </div>
+
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handlePhotoChange}
+          className="hidden"
+        />
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
