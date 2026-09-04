@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import Button from '../common/Button';
 import Input from '../common/Input';
 
@@ -15,6 +16,7 @@ function SkillsForm() {
   const addSkillToGroup = useResumeStore((state) => state.addSkillToGroup);
   const updateSkillInGroup = useResumeStore((state) => state.updateSkillInGroup);
   const removeSkillFromGroup = useResumeStore((state) => state.removeSkillFromGroup);
+  const { t } = useTranslation();
 
   const [newSkillName, setNewSkillName] = useState('');
   const [newGroupName, setNewGroupName] = useState('');
@@ -44,20 +46,19 @@ function SkillsForm() {
 
   return (
     <div className="space-y-6">
-      <h2 className="text-lg font-semibold text-gray-900">Навыки</h2>
+      <h2 className="text-lg font-semibold text-gray-900">{t('skills')}</h2>
 
-      {/* Простые навыки */}
       <div className="space-y-4">
-        <h3 className="font-medium text-gray-700">Список навыков</h3>
+        <h3 className="font-medium text-gray-700">{t('skillsList')}</h3>
         <div className="flex gap-2">
           <Input
             value={newSkillName}
             onChange={(e) => setNewSkillName(e.target.value)}
-            placeholder="Название навыка"
+            placeholder={t('skillName')}
             onKeyPress={(e) => e.key === 'Enter' && handleAddSkill()}
           />
           <Button type="button" onClick={handleAddSkill}>
-            Добавить
+            {t('addSkill')}
           </Button>
         </div>
 
@@ -89,20 +90,22 @@ function SkillsForm() {
             </div>
           ))}
         </div>
+        {skills.length === 0 && (
+          <p className="text-sm text-gray-500 text-center py-4">{t('noSkills')}</p>
+        )}
       </div>
 
-      {/* Группы навыков */}
       <div className="space-y-4">
-        <h3 className="font-medium text-gray-700">Группы навыков</h3>
+        <h3 className="font-medium text-gray-700">{t('skillGroups')}</h3>
         <div className="flex gap-2">
           <Input
             value={newGroupName}
             onChange={(e) => setNewGroupName(e.target.value)}
-            placeholder="Название группы (например, Фреймворки)"
+            placeholder={t('groupName')}
             onKeyPress={(e) => e.key === 'Enter' && handleAddGroup()}
           />
           <Button type="button" onClick={handleAddGroup} variant="secondary">
-            Добавить группу
+            {t('addGroup')}
           </Button>
         </div>
 
@@ -116,7 +119,7 @@ function SkillsForm() {
                   className="flex-1 font-medium"
                 />
                 <Button type="button" variant="danger" onClick={() => removeSkillGroup(group.id)}>
-                  Удалить
+                  {t('deletePhoto')}
                 </Button>
               </div>
 
@@ -129,7 +132,7 @@ function SkillsForm() {
                       [group.id]: e.target.value,
                     }))
                   }
-                  placeholder="Добавить навык в группу"
+                  placeholder={t('addSkillToGroup')}
                   onKeyPress={(e) => e.key === 'Enter' && handleAddSkillToGroup(group.id)}
                 />
                 <Button
@@ -137,7 +140,7 @@ function SkillsForm() {
                   variant="secondary"
                   onClick={() => handleAddSkillToGroup(group.id)}
                 >
-                  Добавить
+                  {t('addSkill')}
                 </Button>
               </div>
 

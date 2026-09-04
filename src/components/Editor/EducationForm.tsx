@@ -1,4 +1,5 @@
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Textarea from '../common/Textarea';
@@ -9,13 +10,14 @@ function EducationForm() {
   const addEducation = useResumeStore((state) => state.addEducation);
   const updateEducation = useResumeStore((state) => state.updateEducation);
   const removeEducation = useResumeStore((state) => state.removeEducation);
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Образование</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('education')}</h2>
         <Button type="button" onClick={() => addEducation()}>
-          Добавить образование
+          {t('addEducation')}
         </Button>
       </div>
 
@@ -23,30 +25,32 @@ function EducationForm() {
         {education.map((edu, index) => (
           <div key={edu.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-medium text-gray-700">Образование {index + 1}</h3>
+              <h3 className="font-medium text-gray-700">
+                {t('education')} {index + 1}
+              </h3>
               <Button variant="danger" type="button" onClick={() => removeEducation(edu.id)}>
-                Удалить
+                {t('deletePhoto')}
               </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField label="Учебное заведение" required>
+              <FormField label={t('institution')} required>
                 <Input
                   value={edu.institution}
                   onChange={(e) => updateEducation(edu.id, { institution: e.target.value })}
-                  placeholder="Название университета"
+                  placeholder="МГУ"
                 />
               </FormField>
 
-              <FormField label="Степень">
+              <FormField label={t('degree')}>
                 <Input
                   value={edu.degree}
                   onChange={(e) => updateEducation(edu.id, { degree: e.target.value })}
-                  placeholder="Бакалавр, Магистр..."
+                  placeholder="Бакалавр"
                 />
               </FormField>
 
-              <FormField label="Специальность">
+              <FormField label={t('field')}>
                 <Input
                   value={edu.field}
                   onChange={(e) => updateEducation(edu.id, { field: e.target.value })}
@@ -54,7 +58,7 @@ function EducationForm() {
                 />
               </FormField>
 
-              <FormField label="Город">
+              <FormField label={t('location')}>
                 <Input
                   value={edu.location}
                   onChange={(e) => updateEducation(edu.id, { location: e.target.value })}
@@ -63,7 +67,7 @@ function EducationForm() {
               </FormField>
 
               <div className="grid grid-cols-2 gap-4">
-                <FormField label="Начало">
+                <FormField label={t('startDate')}>
                   <Input
                     type="month"
                     value={edu.startDate}
@@ -71,7 +75,7 @@ function EducationForm() {
                   />
                 </FormField>
 
-                <FormField label="Окончание">
+                <FormField label={t('endDate')}>
                   <Input
                     type="month"
                     value={edu.endDate}
@@ -89,14 +93,14 @@ function EducationForm() {
                 onChange={(e) => updateEducation(edu.id, { current: e.target.checked })}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">Учусь сейчас</span>
+              <span className="text-sm text-gray-700">{t('studyHere')}</span>
             </label>
 
-            <FormField label="Дополнительная информация">
+            <FormField label={t('additionalInfo')}>
               <Textarea
                 value={edu.description}
                 onChange={(e) => updateEducation(edu.id, { description: e.target.value })}
-                placeholder="Достижения, курсовые работы..."
+                placeholder={t('educationPlaceholder')}
                 rows={3}
               />
             </FormField>
@@ -104,7 +108,7 @@ function EducationForm() {
         ))}
 
         {education.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">Нет добавленного образования</p>
+          <p className="text-sm text-gray-500 text-center py-8">{t('noEducation')}</p>
         )}
       </div>
     </div>

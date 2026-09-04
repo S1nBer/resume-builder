@@ -1,6 +1,7 @@
 import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
 import { isValidEmail, isValidPhone } from '../../utils/validators';
+import { useTranslation } from '../../i18n/useTranslation';
 import FormField from '../common/FormField';
 import Input from '../common/Input';
 import ErrorList from '../common/ErrorList';
@@ -12,11 +13,12 @@ function PersonalInfoForm() {
   const setErrors = useResumeStore((state) => state.setErrors);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const { t } = useTranslation();
 
   const personalErrors = errors.personalInfo || [];
 
   const handleFile = (file: File) => {
-    if (file && file.type.startsWith('image/')) {
+    if (file && file.type.startsWith('image/') && file.size <= 5 * 1024 * 1024) {
       const reader = new FileReader();
       reader.onloadend = () => {
         updatePersonalInfo({ photo: reader.result as string });
@@ -57,12 +59,12 @@ function PersonalInfoForm() {
     switch (field) {
       case 'email':
         if (value && !isValidEmail(value)) {
-          newErrors.push('Некорректный email');
+          newErrors.push(t('invalidEmail'));
         }
         break;
       case 'phone':
         if (value && !isValidPhone(value)) {
-          newErrors.push('Некорректный номер телефона');
+          newErrors.push(t('invalidPhone'));
         }
         break;
     }
@@ -83,9 +85,8 @@ function PersonalInfoForm() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900">Личная информация</h2>
+      <h2 className="text-lg font-semibold text-gray-900">{t('personalInfo')}</h2>
 
-      {/* Фото с drag-and-drop */}
       <div
         onDragOver={handleDragOver}
         onDragLeave={handleDragLeave}
@@ -120,10 +121,10 @@ function PersonalInfoForm() {
 
         <div className="flex-1">
           <p className="text-sm font-medium text-gray-700">
-            {isDragging ? 'Отпустите файл для загрузки' : 'Перетащите фото сюда'}
+            {isDragging ? t('dropPhotoHere') : t('dragPhotoHere')}
           </p>
-          <p className="text-xs text-gray-500 mt-1">или нажмите для выбора файла</p>
-          <p className="text-xs text-gray-400 mt-1">PNG, JPG или SVG, до 5 МБ</p>
+          <p className="text-xs text-gray-500 mt-1">{t('orClickToSelect')}</p>
+          <p className="text-xs text-gray-400 mt-1">{t('photoFormat')}</p>
 
           {personalInfo.photo && (
             <button
@@ -134,7 +135,7 @@ function PersonalInfoForm() {
               }}
               className="mt-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-md text-xs hover:bg-red-200 transition-colors"
             >
-              Удалить фото
+              {t('deletePhoto')}
             </button>
           )}
         </div>
@@ -149,27 +150,29 @@ function PersonalInfoForm() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <FormField label="ФИО" required>
+        <FormField label={t('fullName')} required>
           <Input
             value={personalInfo.fullName}
             onChange={(e) => updatePersonalInfo({ fullName: e.target.value })}
-            placeholder="Иван Иванов"
-            className={personalErrors.some((err) => err.includes('ФИО')) ? 'border-red-500' : ''}
-          />
-        </FormField>
-
-        <FormField label="Должность" required>
-          <Input
-            value={personalInfo.position}
-            onChange={(e) => updatePersonalInfo({ position: e.target.value })}
-            placeholder="Frontend Developer"
+            placeholder={t('yourName')}
             className={
-              personalErrors.some((err) => err.includes('должность')) ? 'border-red-500' : ''
+              personalErrors.some((err) => err.includes(t('fullName'))) ? 'border-red-500' : ''
             }
           />
         </FormField>
 
-        <FormField label="Email" required>
+        <FormField label={t('position')} required>
+          <Input
+            value={personalInfo.position}
+            onChange={(e) => updatePersonalInfo({ position: e.target.value })}
+            placeholder={t('yourPosition')}
+            className={
+              personalErrors.some((err) => err.includes(t('position'))) ? 'border-red-500' : ''
+            }
+          />
+        </FormField>
+
+        <FormField label={t('email')} required>
           <Input
             type="email"
             value={personalInfo.email}
@@ -182,7 +185,7 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label="Телефон">
+        <FormField label={t('phone')}>
           <Input
             type="tel"
             value={personalInfo.phone}
@@ -191,13 +194,11 @@ function PersonalInfoForm() {
               validateField('phone', e.target.value);
             }}
             placeholder="+7 (999) 123-45-67"
-            className={
-              personalErrors.some((err) => err.includes('телефон')) ? 'border-red-500' : ''
-            }
+            className={personalErrors.some((err) => err.includes('phone')) ? 'border-red-500' : ''}
           />
         </FormField>
 
-        <FormField label="Город">
+        <FormField label={t('location')}>
           <Input
             value={personalInfo.location}
             onChange={(e) => updatePersonalInfo({ location: e.target.value })}
@@ -205,7 +206,7 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label="Веб-сайт">
+        <FormField label={t('website')}>
           <Input
             type="url"
             value={personalInfo.website}
@@ -214,7 +215,7 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label="LinkedIn">
+        <FormField label={t('linkedin')}>
           <Input
             type="url"
             value={personalInfo.linkedin}
@@ -223,7 +224,7 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label="GitHub">
+        <FormField label={t('github')}>
           <Input
             type="url"
             value={personalInfo.github}
@@ -232,7 +233,7 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label="Telegram">
+        <FormField label={t('telegram')}>
           <Input
             value={personalInfo.telegram}
             onChange={(e) => updatePersonalInfo({ telegram: e.target.value })}

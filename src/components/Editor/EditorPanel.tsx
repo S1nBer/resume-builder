@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
 import { validateResume, hasErrors } from '../../utils/validators';
+import { useTranslation } from '../../i18n/useTranslation';
 import PersonalInfoForm from './PersonalInfoForm';
 import SummaryForm from './SummaryForm';
 import SkillsForm from './SkillsForm';
@@ -20,23 +21,24 @@ type Section =
   | 'certifications'
   | 'projects';
 
-const sections = [
-  { id: 'personal', label: 'Личная информация', icon: '👤' },
-  { id: 'summary', label: 'О себе', icon: '📝' },
-  { id: 'skills', label: 'Навыки', icon: '💪' },
-  { id: 'experience', label: 'Опыт работы', icon: '💼' },
-  { id: 'education', label: 'Образование', icon: '🎓' },
-  { id: 'languages', label: 'Языки', icon: '🌍' },
-  { id: 'certifications', label: 'Сертификаты', icon: '📜' },
-  { id: 'projects', label: 'Проекты', icon: '🚀' },
-];
-
 function EditorPanel() {
   const [activeSection, setActiveSection] = useState<Section>('personal');
   const [showValidation, setShowValidation] = useState(false);
   const resume = useResumeStore((state) => state.resume);
   const setErrors = useResumeStore((state) => state.setErrors);
   const errors = useResumeStore((state) => state.errors);
+  const { t } = useTranslation();
+
+  const sections = [
+    { id: 'personal', label: t('personalInfo'), icon: '👤' },
+    { id: 'summary', label: t('summary'), icon: '📝' },
+    { id: 'skills', label: t('skills'), icon: '💪' },
+    { id: 'experience', label: t('experience'), icon: '💼' },
+    { id: 'education', label: t('education'), icon: '🎓' },
+    { id: 'languages', label: t('languages'), icon: '🌍' },
+    { id: 'certifications', label: t('certifications'), icon: '📜' },
+    { id: 'projects', label: t('projects'), icon: '🚀' },
+  ];
 
   const handleValidate = () => {
     const validationErrors = validateResume(resume);
@@ -44,7 +46,6 @@ function EditorPanel() {
     setShowValidation(true);
 
     if (hasErrors(validationErrors)) {
-      // Переключаемся на первую секцию с ошибками
       if (validationErrors.personalInfo) {
         setActiveSection('personal');
       } else if (Object.keys(validationErrors).some((key) => key.startsWith('experience'))) {
@@ -80,7 +81,6 @@ function EditorPanel() {
 
   return (
     <div className="space-y-6">
-      {/* Навигация по секциям */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex flex-wrap gap-2">
           {sections.map((section) => (
@@ -103,18 +103,16 @@ function EditorPanel() {
           ))}
         </div>
 
-        {/* Кнопка валидации */}
         <div className="mt-4 flex justify-end">
           <button
             type="button"
             onClick={handleValidate}
             className="px-4 py-2 text-sm font-medium text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
           >
-            Проверить резюме
+            {t('validateResume')}
           </button>
         </div>
 
-        {/* Сообщение о результате валидации */}
         {showValidation && (
           <div
             className={`mt-4 p-3 rounded-md ${
@@ -124,15 +122,12 @@ function EditorPanel() {
             }`}
           >
             <p className={`text-sm ${hasErrors(errors) ? 'text-red-700' : 'text-green-700'}`}>
-              {hasErrors(errors)
-                ? 'Найдены ошибки. Пожалуйста, исправьте их.'
-                : 'Отлично! Резюме готово к экспорту.'}
+              {hasErrors(errors) ? t('errorsFound') : t('resumeReady')}
             </p>
           </div>
         )}
       </div>
 
-      {/* Форма активной секции */}
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
         {renderSection()}
       </div>

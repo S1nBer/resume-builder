@@ -1,25 +1,27 @@
 import { useState } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import type { Language } from '../../types/resume';
 import Button from '../common/Button';
 import Input from '../common/Input';
-
-const languageLevels = [
-  { value: 'basic', label: 'Базовый' },
-  { value: 'intermediate', label: 'Средний' },
-  { value: 'advanced', label: 'Продвинутый' },
-  { value: 'fluent', label: 'Свободный' },
-  { value: 'native', label: 'Родной' },
-] as const;
 
 function LanguagesForm() {
   const languages = useResumeStore((state) => state.resume.languages);
   const addLanguage = useResumeStore((state) => state.addLanguage);
   const updateLanguage = useResumeStore((state) => state.updateLanguage);
   const removeLanguage = useResumeStore((state) => state.removeLanguage);
+  const { t } = useTranslation();
 
   const [newLangName, setNewLangName] = useState('');
   const [newLangLevel, setNewLangLevel] = useState<Language['level']>('intermediate');
+
+  const languageLevels = [
+    { value: 'basic', label: t('basic') },
+    { value: 'intermediate', label: t('intermediate') },
+    { value: 'advanced', label: t('advanced') },
+    { value: 'fluent', label: t('fluent') },
+    { value: 'native', label: t('native') },
+  ] as const;
 
   const handleAddLanguage = () => {
     if (newLangName.trim()) {
@@ -33,13 +35,13 @@ function LanguagesForm() {
 
   return (
     <div className="space-y-4">
-      <h2 className="text-lg font-semibold text-gray-900">Языки</h2>
+      <h2 className="text-lg font-semibold text-gray-900">{t('languages')}</h2>
 
       <div className="flex gap-2">
         <Input
           value={newLangName}
           onChange={(e) => setNewLangName(e.target.value)}
-          placeholder="Название языка"
+          placeholder={t('languageName')}
           onKeyPress={(e) => e.key === 'Enter' && handleAddLanguage()}
         />
         <select
@@ -54,7 +56,7 @@ function LanguagesForm() {
           ))}
         </select>
         <Button type="button" onClick={handleAddLanguage}>
-          Добавить
+          {t('addLanguage')}
         </Button>
       </div>
 
@@ -80,12 +82,12 @@ function LanguagesForm() {
               ))}
             </select>
             <Button variant="danger" type="button" onClick={() => removeLanguage(lang.id)}>
-              Удалить
+              {t('deletePhoto')}
             </Button>
           </div>
         ))}
         {languages.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-4">Нет добавленных языков</p>
+          <p className="text-sm text-gray-500 text-center py-4">{t('noLanguages')}</p>
         )}
       </div>
     </div>

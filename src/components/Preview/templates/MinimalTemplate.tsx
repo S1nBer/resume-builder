@@ -1,5 +1,6 @@
 import type { Resume, SectionId } from '../../../types/resume';
 import { useResumeStore } from '../../../store/resumeStore';
+import { useTranslation } from '../../../i18n/useTranslation';
 
 interface MinimalTemplateProps {
   resume: Resume;
@@ -19,6 +20,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
     certifications,
     projects,
   } = resume;
+  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -36,7 +38,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
                 style={{ color: accentColor }}
               >
-                О себе
+                {t('aboutMe')}
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
             </section>
@@ -51,7 +53,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4"
                 style={{ color: accentColor }}
               >
-                Опыт работы
+                {t('experience')}
               </h2>
               <div className="space-y-6">
                 {experience.map((exp) => (
@@ -83,7 +85,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-4"
                 style={{ color: accentColor }}
               >
-                Образование
+                {t('education')}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
@@ -113,7 +115,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
                 style={{ color: accentColor }}
               >
-                Навыки
+                {t('skills')}
               </h2>
 
               {skills.length > 0 && (
@@ -166,7 +168,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
                 style={{ color: accentColor }}
               >
-                Языки
+                {t('languages')}
               </h2>
               <div className="flex flex-wrap gap-4">
                 {languages.map((lang) => (
@@ -188,7 +190,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
                 style={{ color: accentColor }}
               >
-                Сертификаты
+                {t('certifications')}
               </h2>
               <div className="space-y-2">
                 {certifications.map((cert) => (
@@ -213,7 +215,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 className="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3"
                 style={{ color: accentColor }}
               >
-                Проекты
+                {t('projects')}
               </h2>
               <div className="space-y-4">
                 {projects.map((project) => (

@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import ModernTemplate from './templates/ModernTemplate';
 import ClassicTemplate from './templates/ClassicTemplate';
 import MinimalTemplate from './templates/MinimalTemplate';
@@ -7,18 +8,19 @@ import SectionSettings from './SectionSettings';
 import ColorPicker from './ColorPicker';
 import { exportToPdf } from '../../utils/pdfGenerator';
 
-const templates = [
-  { id: 'modern', name: 'Современный', component: ModernTemplate },
-  { id: 'classic', name: 'Классический', component: ClassicTemplate },
-  { id: 'minimal', name: 'Минимальный', component: MinimalTemplate },
-];
-
 function PreviewPanel() {
   const resume = useResumeStore((state) => state.resume);
   const selectedTemplate = useResumeStore((state) => state.selectedTemplate);
   const setTemplate = useResumeStore((state) => state.setTemplate);
   const previewRef = useRef<HTMLDivElement>(null);
   const [showTemplateSelector, setShowTemplateSelector] = useState(false);
+  const { t } = useTranslation();
+
+  const templates = [
+    { id: 'modern', name: t('modern'), component: ModernTemplate },
+    { id: 'classic', name: t('classic'), component: ClassicTemplate },
+    { id: 'minimal', name: t('minimal'), component: MinimalTemplate },
+  ];
 
   const handleExportPdf = async () => {
     if (previewRef.current) {
@@ -36,11 +38,10 @@ function PreviewPanel() {
     <div className="space-y-4">
       <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <h2 className="text-lg font-semibold text-gray-900 mr-auto">Предпросмотр</h2>
+          <h2 className="text-lg font-semibold text-gray-900 mr-auto">{t('preview')}</h2>
           <div className="flex items-center gap-2 flex-wrap">
             <SectionSettings />
             <ColorPicker />
-            {/* Переключатель шаблонов */}
             <div className="relative">
               <button
                 type="button"
@@ -76,13 +77,12 @@ function PreviewPanel() {
               onClick={handleExportPdf}
               className="px-3 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 transition-colors whitespace-nowrap"
             >
-              PDF
+              {t('downloadPdf')}
             </button>
           </div>
         </div>
       </div>
 
-      {/* Контейнер с резюме */}
       <div
         id="resume-preview"
         ref={previewRef}

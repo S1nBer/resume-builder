@@ -1,5 +1,6 @@
 import type { Resume, SectionId } from '../../../types/resume';
 import { useResumeStore } from '../../../store/resumeStore';
+import { useTranslation } from '../../../i18n/useTranslation';
 
 interface ClassicTemplateProps {
   resume: Resume;
@@ -19,6 +20,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
     certifications,
     projects,
   } = resume;
+  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -36,7 +38,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                О себе
+                {t('aboutMe')}
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
             </section>
@@ -51,7 +53,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Опыт работы
+                {t('experience')}
               </h2>
               <div className="space-y-6">
                 {experience.map((exp) => (
@@ -86,7 +88,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Образование
+                {t('education')}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
@@ -116,7 +118,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Навыки
+                {t('skills')}
               </h2>
 
               {skills.length > 0 && (
@@ -170,7 +172,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Языки
+                {t('languages')}
               </h2>
               <div className="space-y-2">
                 {languages.map((lang) => (
@@ -192,7 +194,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Сертификаты
+                {t('certifications')}
               </h2>
               <div className="space-y-3">
                 {certifications.map((cert) => (
@@ -217,7 +219,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 className="text-xl font-bold text-gray-900 uppercase border-b-2 pb-2 mb-4"
                 style={{ borderColor: accentColor }}
               >
-                Проекты
+                {t('projects')}
               </h2>
               <div className="space-y-4">
                 {projects.map((project) => (

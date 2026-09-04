@@ -17,6 +17,7 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import type { SectionOrder } from '../../types/resume';
 
 interface SortableSectionProps {
@@ -25,6 +26,7 @@ interface SortableSectionProps {
 
 function SortableSection({ section }: SortableSectionProps) {
   const toggleSection = useResumeStore((state) => state.toggleSection);
+  const { t } = useTranslation();
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: section.id,
   });
@@ -33,6 +35,16 @@ function SortableSection({ section }: SortableSectionProps) {
     transform: CSS.Transform.toString(transform),
     transition,
     opacity: isDragging ? 0.5 : 1,
+  };
+
+  const sectionTitles: Record<string, string> = {
+    summary: t('summary'),
+    experience: t('experience'),
+    education: t('education'),
+    skills: t('skills'),
+    languages: t('languages'),
+    certifications: t('certifications'),
+    projects: t('projects'),
   };
 
   return (
@@ -52,7 +64,7 @@ function SortableSection({ section }: SortableSectionProps) {
         >
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8h16M4 16h16" />
         </svg>
-        <span className="text-sm text-gray-700">{section.title}</span>
+        <span className="text-sm text-gray-700">{sectionTitles[section.id]}</span>
       </div>
       <label className="flex items-center space-x-2">
         <input
@@ -71,6 +83,7 @@ function SectionSettings() {
   const [isOpen, setIsOpen] = useState(false);
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
   const updateSectionOrder = useResumeStore((state) => state.updateSectionOrder);
+  const { t } = useTranslation();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -98,7 +111,7 @@ function SectionSettings() {
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center space-x-2"
+        className="px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md hover:bg-gray-50 transition-colors flex items-center space-x-2"
       >
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path
@@ -108,15 +121,13 @@ function SectionSettings() {
             d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"
           />
         </svg>
-        <span>Настройки секций</span>
+        <span>{t('sectionSettings')}</span>
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-64 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-3">
-          <h3 className="text-sm font-semibold text-gray-900 mb-3">Порядок секций</h3>
-          <p className="text-xs text-gray-500 mb-3">
-            Перетащите для изменения порядка. Отключите ненужные секции.
-          </p>
+          <h3 className="text-sm font-semibold text-gray-900 mb-3">{t('sectionSettings')}</h3>
+          <p className="text-xs text-gray-500 mb-3">{t('dragToReorder')}</p>
           <DndContext
             sensors={sensors}
             collisionDetection={closestCenter}

@@ -1,21 +1,23 @@
 import { useState } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
-
-const presetColors = [
-  { id: 'blue', color: '#2563eb', name: 'Синий' },
-  { id: 'red', color: '#dc2626', name: 'Красный' },
-  { id: 'green', color: '#16a34a', name: 'Зелёный' },
-  { id: 'purple', color: '#7c3aed', name: 'Фиолетовый' },
-  { id: 'orange', color: '#ea580c', name: 'Оранжевый' },
-  { id: 'teal', color: '#0d9488', name: 'Бирюзовый' },
-  { id: 'pink', color: '#db2777', name: 'Розовый' },
-  { id: 'gray', color: '#4b5563', name: 'Серый' },
-];
+import { useTranslation } from '../../i18n/useTranslation';
 
 function ColorPicker() {
   const [isOpen, setIsOpen] = useState(false);
   const accentColor = useResumeStore((state) => state.accentColor);
   const setAccentColor = useResumeStore((state) => state.setAccentColor);
+  const { t } = useTranslation();
+
+  const presetColors = [
+    { id: 'blue', color: '#2563eb', name: t('blue') },
+    { id: 'red', color: '#dc2626', name: t('red') },
+    { id: 'green', color: '#16a34a', name: t('green') },
+    { id: 'purple', color: '#7c3aed', name: t('purple') },
+    { id: 'orange', color: '#ea580c', name: t('orange') },
+    { id: 'teal', color: '#0d9488', name: t('teal') },
+    { id: 'pink', color: '#db2777', name: t('pink') },
+    { id: 'gray', color: '#4b5563', name: t('gray') },
+  ];
 
   return (
     <div className="relative">
@@ -28,12 +30,12 @@ function ColorPicker() {
           className="w-4 h-4 rounded-full border border-gray-300"
           style={{ backgroundColor: accentColor }}
         ></span>
-        <span>Цвет</span>
+        <span>{t('color')}</span>
       </button>
 
       {isOpen && (
         <div className="absolute right-0 mt-2 w-48 bg-white border border-gray-200 rounded-lg shadow-lg z-20 p-3">
-          <h3 className="text-sm font-semibold text-gray-900 mb-2">Цвет акцента</h3>
+          <h3 className="text-sm font-semibold text-gray-900 mb-2">{t('accentColor')}</h3>
           <div className="grid grid-cols-4 gap-2">
             {presetColors.map((preset) => (
               <button
@@ -52,7 +54,7 @@ function ColorPicker() {
             ))}
           </div>
           <div className="mt-3">
-            <label className="block text-xs text-gray-600 mb-1">Свой цвет</label>
+            <label className="block text-xs text-gray-600 mb-1">{t('customColor')}</label>
             <input
               type="color"
               value={accentColor}

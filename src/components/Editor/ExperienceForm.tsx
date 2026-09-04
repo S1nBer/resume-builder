@@ -1,4 +1,5 @@
 import { useResumeStore } from '../../store/resumeStore';
+import { useTranslation } from '../../i18n/useTranslation';
 import Button from '../common/Button';
 import Input from '../common/Input';
 import Textarea from '../common/Textarea';
@@ -9,13 +10,14 @@ function ExperienceForm() {
   const addExperience = useResumeStore((state) => state.addExperience);
   const updateExperience = useResumeStore((state) => state.updateExperience);
   const removeExperience = useResumeStore((state) => state.removeExperience);
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Опыт работы</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('experience')}</h2>
         <Button type="button" onClick={() => addExperience()}>
-          Добавить опыт
+          {t('addExperience')}
         </Button>
       </div>
 
@@ -23,22 +25,24 @@ function ExperienceForm() {
         {experience.map((exp, index) => (
           <div key={exp.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-medium text-gray-700">Место работы {index + 1}</h3>
+              <h3 className="font-medium text-gray-700">
+                {t('workPlace')} {index + 1}
+              </h3>
               <Button variant="danger" type="button" onClick={() => removeExperience(exp.id)}>
-                Удалить
+                {t('deletePhoto')}
               </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField label="Компания" required>
+              <FormField label={t('company')} required>
                 <Input
                   value={exp.company}
                   onChange={(e) => updateExperience(exp.id, { company: e.target.value })}
-                  placeholder="Название компании"
+                  placeholder="Google"
                 />
               </FormField>
 
-              <FormField label="Должность" required>
+              <FormField label={t('position')} required>
                 <Input
                   value={exp.position}
                   onChange={(e) => updateExperience(exp.id, { position: e.target.value })}
@@ -46,7 +50,7 @@ function ExperienceForm() {
                 />
               </FormField>
 
-              <FormField label="Город">
+              <FormField label={t('location')}>
                 <Input
                   value={exp.location}
                   onChange={(e) => updateExperience(exp.id, { location: e.target.value })}
@@ -55,7 +59,7 @@ function ExperienceForm() {
               </FormField>
 
               <div className="grid grid-cols-2 gap-4">
-                <FormField label="Начало">
+                <FormField label={t('startDate')}>
                   <Input
                     type="month"
                     value={exp.startDate}
@@ -63,7 +67,7 @@ function ExperienceForm() {
                   />
                 </FormField>
 
-                <FormField label="Окончание">
+                <FormField label={t('endDate')}>
                   <Input
                     type="month"
                     value={exp.endDate}
@@ -81,14 +85,14 @@ function ExperienceForm() {
                 onChange={(e) => updateExperience(exp.id, { current: e.target.checked })}
                 className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
               />
-              <span className="text-sm text-gray-700">Работаю здесь сейчас</span>
+              <span className="text-sm text-gray-700">{t('workHere')}</span>
             </label>
 
-            <FormField label="Описание">
+            <FormField label={t('description')}>
               <Textarea
                 value={exp.description}
                 onChange={(e) => updateExperience(exp.id, { description: e.target.value })}
-                placeholder="Опишите ваши обязанности и достижения..."
+                placeholder={t('experiencePlaceholder')}
                 rows={4}
               />
             </FormField>
@@ -96,7 +100,7 @@ function ExperienceForm() {
         ))}
 
         {experience.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">Нет добавленного опыта работы</p>
+          <p className="text-sm text-gray-500 text-center py-8">{t('noExperience')}</p>
         )}
       </div>
     </div>

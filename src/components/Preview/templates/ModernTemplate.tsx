@@ -1,5 +1,6 @@
 import type { Resume, SectionId } from '../../../types/resume';
 import { useResumeStore } from '../../../store/resumeStore';
+import { useTranslation } from '../../../i18n/useTranslation';
 
 interface ModernTemplateProps {
   resume: Resume;
@@ -19,6 +20,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
     certifications,
     projects,
   } = resume;
+  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -36,7 +38,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                О себе
+                {t('aboutMe')}
               </h2>
               <p className="text-gray-700 leading-relaxed">{summary}</p>
             </section>
@@ -51,7 +53,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Опыт работы
+                {t('experience')}
               </h2>
               <div className="space-y-4">
                 {experience.map((exp) => (
@@ -85,7 +87,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Образование
+                {t('education')}
               </h2>
               <div className="space-y-4">
                 {education.map((edu) => (
@@ -116,7 +118,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Навыки
+                {t('skills')}
               </h2>
 
               {skills.length > 0 && (
@@ -167,7 +169,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Языки
+                {t('languages')}
               </h2>
               <div className="space-y-2">
                 {languages.map((lang) => (
@@ -189,7 +191,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Сертификаты
+                {t('certifications')}
               </h2>
               <div className="space-y-2">
                 {certifications.map((cert) => (
@@ -213,7 +215,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 className="text-lg font-semibold text-gray-900 mb-2 pb-1 border-b-2"
                 style={{ borderColor: accentColor }}
               >
-                Проекты
+                {t('projects')}
               </h2>
               <div className="space-y-4">
                 {projects.map((project) => (
