@@ -82,7 +82,7 @@ function LanguagesForm() {
               ))}
             </select>
             <Button variant="danger" type="button" onClick={() => removeLanguage(lang.id)}>
-              {t('deletePhoto')}
+              {t('delete')}
             </Button>
           </div>
         ))}

@@ -29,7 +29,7 @@ function EducationForm() {
                 {t('education')} {index + 1}
               </h3>
               <Button variant="danger" type="button" onClick={() => removeEducation(edu.id)}>
-                {t('deletePhoto')}
+                {t('delete')}
               </Button>
             </div>
 

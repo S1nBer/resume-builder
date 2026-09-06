@@ -3,22 +3,24 @@ import Button from '../common/Button';
 import Input from '../common/Input';
 import Textarea from '../common/Textarea';
 import FormField from '../common/FormField';
+import { useTranslation } from '../../i18n/useTranslation';
 
 function ProjectsForm() {
   const projects = useResumeStore((state) => state.resume.projects);
   const addProject = useResumeStore((state) => state.addProject);
   const updateProject = useResumeStore((state) => state.updateProject);
   const removeProject = useResumeStore((state) => state.removeProject);
+  const { t } = useTranslation();
 
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
-        <h2 className="text-lg font-semibold text-gray-900">Проекты</h2>
+        <h2 className="text-lg font-semibold text-gray-900">{t('projects')}</h2>
         <Button
           type="button"
           onClick={() => addProject({ name: '', description: '', technologies: [] })}
         >
-          Добавить проект
+          {t('addProject')}
         </Button>
       </div>
 
@@ -26,22 +28,24 @@ function ProjectsForm() {
         {projects.map((project, index) => (
           <div key={project.id} className="border border-gray-200 rounded-lg p-4 space-y-4">
             <div className="flex justify-between items-center">
-              <h3 className="font-medium text-gray-700">Проект {index + 1}</h3>
+              <h3 className="font-medium text-gray-700">
+                {t('project')} {index + 1}
+              </h3>
               <Button variant="danger" type="button" onClick={() => removeProject(project.id)}>
-                Удалить
+                {t('delete')}
               </Button>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <FormField label="Название проекта" required>
+              <FormField label={t('projectName')} required>
                 <Input
                   value={project.name}
                   onChange={(e) => updateProject(project.id, { name: e.target.value })}
-                  placeholder="Название проекта"
+                  placeholder={t('projectName')}
                 />
               </FormField>
 
-              <FormField label="Ссылка на проект">
+              <FormField label={t('projectLink')}>
                 <Input
                   type="url"
                   value={project.url}
@@ -51,16 +55,16 @@ function ProjectsForm() {
               </FormField>
             </div>
 
-            <FormField label="Описание">
+            <FormField label={t('description')}>
               <Textarea
                 value={project.description}
                 onChange={(e) => updateProject(project.id, { description: e.target.value })}
-                placeholder="Опишите проект..."
+                placeholder={t('projectDescription')}
                 rows={4}
               />
             </FormField>
 
-            <FormField label="Технологии (через запятую)">
+            <FormField label={t('technologies')}>
               <Input
                 value={project.technologies.join(', ')}
                 onChange={(e) => {
@@ -77,7 +81,7 @@ function ProjectsForm() {
         ))}
 
         {projects.length === 0 && (
-          <p className="text-sm text-gray-500 text-center py-8">Нет добавленных проектов</p>
+          <p className="text-sm text-gray-500 text-center py-8">{t('noProjects')}</p>
         )}
       </div>
     </div>

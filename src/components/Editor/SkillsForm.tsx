@@ -119,7 +119,7 @@ function SkillsForm() {
                   className="flex-1 font-medium"
                 />
                 <Button type="button" variant="danger" onClick={() => removeSkillGroup(group.id)}>
-                  {t('deletePhoto')}
+                  {t('delete')}
                 </Button>
               </div>
 

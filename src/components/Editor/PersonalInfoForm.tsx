@@ -135,7 +135,7 @@ function PersonalInfoForm() {
               }}
               className="mt-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-md text-xs hover:bg-red-200 transition-colors"
             >
-              {t('deletePhoto')}
+              {t('delete')}
             </button>
           )}
         </div>

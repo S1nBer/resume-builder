@@ -29,7 +29,7 @@ function ExperienceForm() {
                 {t('workPlace')} {index + 1}
               </h3>
               <Button variant="danger" type="button" onClick={() => removeExperience(exp.id)}>
-                {t('deletePhoto')}
+                {t('delete')}
               </Button>
             </div>
 

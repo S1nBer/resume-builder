@@ -8,6 +8,7 @@ export const translations = {
     downloadPdf: 'Скачать PDF',
     fullscreen: 'Во весь экран',
     showEditor: 'Показать редактор',
+    delete: 'Удалить',
 
     // Секции
     personalInfo: 'Личная информация',
@@ -30,7 +31,6 @@ export const translations = {
     github: 'GitHub',
     telegram: 'Telegram',
     uploadPhoto: 'Загрузить фото',
-    deletePhoto: 'Удалить',
     dragPhotoHere: 'Перетащите фото сюда',
     orClickToSelect: 'или нажмите для выбора файла',
     photoFormat: 'PNG, JPG или SVG, до 5 МБ',
@@ -95,6 +95,8 @@ export const translations = {
     projectLink: 'Ссылка на проект',
     technologies: 'Технологии (через запятую)',
     noProjects: 'Нет добавленных проектов',
+    project: 'Проект',
+    projectDescription: 'Опишите проект...',
 
     // Предпросмотр
     preview: 'Предпросмотр',
@@ -144,6 +146,7 @@ export const translations = {
     downloadPdf: 'Download PDF',
     fullscreen: 'Fullscreen',
     showEditor: 'Show editor',
+    delete: 'Delete',
 
     // Sections
     personalInfo: 'Personal Info',
@@ -166,7 +169,6 @@ export const translations = {
     github: 'GitHub',
     telegram: 'Telegram',
     uploadPhoto: 'Upload photo',
-    deletePhoto: 'Delete',
     dragPhotoHere: 'Drag photo here',
     orClickToSelect: 'or click to select file',
     photoFormat: 'PNG, JPG or SVG, up to 5 MB',
@@ -231,6 +233,8 @@ export const translations = {
     projectLink: 'Project link',
     technologies: 'Technologies (comma separated)',
     noProjects: 'No projects added',
+    project: 'Project',
+    projectDescription: 'Describe project...',
 
     // Preview
     preview: 'Preview',
