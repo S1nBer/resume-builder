@@ -9,6 +9,7 @@ interface MinimalTemplateProps {
 function MinimalTemplate({ resume }: MinimalTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
   const accentColor = useResumeStore((state) => state.accentColor);
+  const { t } = useTranslation();
   const {
     personalInfo,
     summary,
@@ -20,7 +21,6 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
     certifications,
     projects,
   } = resume;
-  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -61,7 +61,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                     <div className="flex justify-between items-baseline">
                       <h3 className="font-medium text-gray-900">{exp.position}</h3>
                       <span className="text-sm text-gray-500 whitespace-nowrap">
-                        {exp.startDate} - {exp.current ? 'настоящее время' : exp.endDate}
+                        {exp.startDate} - {exp.current ? t('present') : exp.endDate}
                       </span>
                     </div>
                     <p className="text-gray-600 text-sm mt-1">{exp.company}</p>
@@ -93,7 +93,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                     <div className="flex justify-between items-baseline">
                       <h3 className="font-medium text-gray-900">{edu.institution}</h3>
                       <span className="text-sm text-gray-500 whitespace-nowrap">
-                        {edu.startDate} - {edu.current ? 'настоящее время' : edu.endDate}
+                        {edu.startDate} - {edu.current ? t('present') : edu.endDate}
                       </span>
                     </div>
                     <p className="text-gray-600 text-sm mt-1">
@@ -174,7 +174,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 {languages.map((lang) => (
                   <div key={lang.id} className="text-sm">
                     <span className="text-gray-900 font-medium">{lang.name}</span>
-                    <span className="text-gray-500 ml-2">{lang.level}</span>
+                    <span className="text-gray-500 ml-2">{t(lang.level)}</span>
                   </div>
                 ))}
               </div>
@@ -257,28 +257,60 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
           )}
           <div>
             <h1 className="text-3xl font-light text-gray-900">
-              {personalInfo.fullName || 'Ваше имя'}
+              {personalInfo.fullName || t('yourName')}
             </h1>
             <p className="text-lg mt-1" style={{ color: accentColor }}>
-              {personalInfo.position || 'Должность'}
+              {personalInfo.position || t('yourPosition')}
             </p>
           </div>
         </div>
 
         <div className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-600">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>{personalInfo.phone}</span>}
-          {personalInfo.location && <span>{personalInfo.location}</span>}
-          {personalInfo.website && (
-            <a
-              href={personalInfo.website}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{ color: accentColor }}
-              className="hover:opacity-80"
+          {personalInfo.email && (
+            <span
+              className={
+                personalInfo.preferredContact === 'email' ? 'font-semibold text-gray-900' : ''
+              }
             >
-              {personalInfo.website}
-            </a>
+              <span className="font-medium text-gray-700">{t('contactEmail')}:</span>{' '}
+              {personalInfo.email}
+              {personalInfo.preferredContact === 'email' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
+          )}
+          {personalInfo.phone && (
+            <span
+              className={
+                personalInfo.preferredContact === 'phone' ? 'font-semibold text-gray-900' : ''
+              }
+            >
+              <span className="font-medium text-gray-700">{t('contactPhone')}:</span>{' '}
+              {personalInfo.phone}
+              {personalInfo.preferredContact === 'phone' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
+          )}
+          {/* location, country — без изменений */}
+          {personalInfo.telegram && (
+            <span
+              className={
+                personalInfo.preferredContact === 'telegram' ? 'font-semibold text-gray-900' : ''
+              }
+            >
+              <span className="font-medium text-gray-700">{t('contactTelegram')}:</span>{' '}
+              {personalInfo.telegram}
+              {personalInfo.preferredContact === 'telegram' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
           )}
         </div>
       </header>

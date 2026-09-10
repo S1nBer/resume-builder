@@ -7,10 +7,12 @@ export interface PersonalInfo {
   email: string;
   phone: string;
   location: string;
+  country: string;
   website?: string;
   linkedin?: string;
   github?: string;
   telegram?: string;
+  preferredContact: 'email' | 'phone' | 'telegram' | null;
 }
 
 export interface Skill {

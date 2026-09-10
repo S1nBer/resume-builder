@@ -9,6 +9,7 @@ interface ClassicTemplateProps {
 function ClassicTemplate({ resume }: ClassicTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
   const accentColor = useResumeStore((state) => state.accentColor);
+  const { t } = useTranslation();
   const {
     personalInfo,
     summary,
@@ -20,7 +21,6 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
     certifications,
     projects,
   } = resume;
-  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -61,7 +61,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                     <div className="flex justify-between items-baseline">
                       <h3 className="text-lg font-semibold text-gray-900">{exp.position}</h3>
                       <span className="text-sm text-gray-600 whitespace-nowrap">
-                        {exp.startDate} - {exp.current ? 'настоящее время' : exp.endDate}
+                        {exp.startDate} - {exp.current ? t('present') : exp.endDate}
                       </span>
                     </div>
                     <p className="text-gray-700 font-medium mt-1">
@@ -96,7 +96,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                     <div className="flex justify-between items-baseline">
                       <h3 className="text-lg font-semibold text-gray-900">{edu.institution}</h3>
                       <span className="text-sm text-gray-600 whitespace-nowrap">
-                        {edu.startDate} - {edu.current ? 'настоящее время' : edu.endDate}
+                        {edu.startDate} - {edu.current ? t('present') : edu.endDate}
                       </span>
                     </div>
                     <p className="text-gray-700 mt-1">
@@ -178,7 +178,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                 {languages.map((lang) => (
                   <div key={lang.id} className="flex justify-between">
                     <span className="text-gray-700">{lang.name}</span>
-                    <span className="text-gray-600 text-sm capitalize">{lang.level}</span>
+                    <span className="text-gray-600 text-sm capitalize">{t(lang.level)}</span>
                   </div>
                 ))}
               </div>
@@ -228,7 +228,7 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
                     <p className="text-gray-700 text-sm mt-1">{project.description}</p>
                     {project.technologies.length > 0 && (
                       <p className="text-gray-600 text-sm mt-2">
-                        <strong>Технологии:</strong> {project.technologies.join(', ')}
+                        <strong>{t('technologiesLabel')}</strong> {project.technologies.join(', ')}
                       </p>
                     )}
                   </div>
@@ -247,16 +247,62 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
       {/* Шапка */}
       <header className="text-center mb-8">
         <h1 className="text-4xl font-bold text-gray-900 uppercase tracking-wide">
-          {personalInfo.fullName || 'Ваше имя'}
+          {personalInfo.fullName || t('yourName')}
         </h1>
         <p className="text-xl mt-2" style={{ color: accentColor }}>
-          {personalInfo.position || 'Должность'}
+          {personalInfo.position || t('yourPosition')}
         </p>
 
         <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
-          {personalInfo.email && <span>{personalInfo.email}</span>}
-          {personalInfo.phone && <span>{personalInfo.phone}</span>}
-          {personalInfo.location && <span>{personalInfo.location}</span>}
+          {personalInfo.email && (
+            <span
+              className={
+                personalInfo.preferredContact === 'email' ? 'font-semibold text-gray-900' : ''
+              }
+            >
+              <span className="font-medium text-gray-700">{t('contactEmail')}:</span>{' '}
+              {personalInfo.email}
+              {personalInfo.preferredContact === 'email' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
+          )}
+          {personalInfo.phone && (
+            <span
+              className={
+                personalInfo.preferredContact === 'phone' ? 'font-semibold text-gray-900' : ''
+              }
+            >
+              <span className="font-medium text-gray-700">{t('contactPhone')}:</span>{' '}
+              {personalInfo.phone}
+              {personalInfo.preferredContact === 'phone' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
+          )}
+          {/* location, country — без изменений */}
+        </div>
+
+        <div className="mt-2 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
+          {personalInfo.telegram && (
+            <span
+              className={
+                personalInfo.preferredContact === 'telegram' ? 'font-semibold text-gray-900' : ''
+              }
+            >
+              <span className="font-medium text-gray-700">{t('contactTelegram')}:</span>{' '}
+              {personalInfo.telegram}
+              {personalInfo.preferredContact === 'telegram' && (
+                <span className="ml-1 text-xs italic" style={{ color: accentColor }}>
+                  — {t('preferredContact').toLowerCase()}
+                </span>
+              )}
+            </span>
+          )}
         </div>
 
         {personalInfo.photo && (

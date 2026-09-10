@@ -26,6 +26,13 @@ export const translations = {
     email: 'Email',
     phone: 'Телефон',
     location: 'Город',
+    country: 'Страна',
+    preferredContact: 'Предпочитаемый способ связи',
+    contactEmail: 'Email',
+    contactPhone: 'Телефон',
+    contactLocation: 'Город',
+    contactCountry: 'Страна',
+    contactTelegram: 'Telegram',
     website: 'Веб-сайт',
     linkedin: 'LinkedIn',
     github: 'GitHub',
@@ -138,6 +145,10 @@ export const translations = {
     yourPosition: 'Должность',
     present: 'настоящее время',
     technologiesLabel: 'Технологии:',
+
+    // Подсказки в формах
+    placeholderLocation: 'Москва',
+    placeholderCountry: 'Россия',
   },
   en: {
     // General
@@ -164,6 +175,13 @@ export const translations = {
     email: 'Email',
     phone: 'Phone',
     location: 'Location',
+    country: 'Country',
+    preferredContact: 'Preferred contact method',
+    contactEmail: 'Email',
+    contactPhone: 'Phone',
+    contactLocation: 'Location',
+    contactCountry: 'Country',
+    contactTelegram: 'Telegram',
     website: 'Website',
     linkedin: 'LinkedIn',
     github: 'GitHub',
@@ -276,6 +294,10 @@ export const translations = {
     yourPosition: 'Position',
     present: 'present',
     technologiesLabel: 'Technologies:',
+
+    // Form hints
+    placeholderLocation: 'London',
+    placeholderCountry: 'UK',
   },
 } as const;
 

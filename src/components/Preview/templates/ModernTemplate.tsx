@@ -9,6 +9,7 @@ interface ModernTemplateProps {
 function ModernTemplate({ resume }: ModernTemplateProps) {
   const sectionOrder = useResumeStore((state) => state.sectionOrder);
   const accentColor = useResumeStore((state) => state.accentColor);
+  const { t } = useTranslation();
   const {
     personalInfo,
     summary,
@@ -20,7 +21,6 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
     certifications,
     projects,
   } = resume;
-  const { t } = useTranslation();
 
   const isSectionEnabled = (sectionId: SectionId) => {
     const section = sectionOrder.find((s) => s.id === sectionId);
@@ -64,7 +64,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                         <p className="text-gray-600">{exp.company}</p>
                       </div>
                       <p className="text-sm text-gray-500 whitespace-nowrap">
-                        {exp.startDate} - {exp.current ? 'настоящее время' : exp.endDate}
+                        {exp.startDate} - {exp.current ? t('present') : exp.endDate}
                       </p>
                     </div>
                     {exp.description && (
@@ -100,7 +100,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                         </p>
                       </div>
                       <p className="text-sm text-gray-500 whitespace-nowrap">
-                        {edu.startDate} - {edu.current ? 'настоящее время' : edu.endDate}
+                        {edu.startDate} - {edu.current ? t('present') : edu.endDate}
                       </p>
                     </div>
                   </div>
@@ -175,7 +175,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                 {languages.map((lang) => (
                   <div key={lang.id} className="flex justify-between">
                     <span className="text-gray-700">{lang.name}</span>
-                    <span className="text-gray-500 text-sm capitalize">{lang.level}</span>
+                    <span className="text-gray-500 text-sm capitalize">{t(lang.level)}</span>
                   </div>
                 ))}
               </div>
@@ -264,53 +264,66 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
 
         <div className="flex-1">
           <h1 className="text-3xl font-bold text-gray-900">
-            {personalInfo.fullName || 'Ваше имя'}
+            {personalInfo.fullName || t('yourName')}
           </h1>
           <p className="text-xl mt-1" style={{ color: accentColor }}>
-            {personalInfo.position || 'Должность'}
+            {personalInfo.position || t('yourPosition')}
           </p>
 
-          <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-            {personalInfo.email && <span>{personalInfo.email}</span>}
-            {personalInfo.phone && <span>{personalInfo.phone}</span>}
-            {personalInfo.location && <span>{personalInfo.location}</span>}
-          </div>
-
-          <div className="mt-2 flex flex-wrap gap-x-4 gap-y-2 text-sm text-gray-600">
-            {personalInfo.website && (
-              <a
-                href={personalInfo.website}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: accentColor }}
-                className="hover:opacity-80"
-              >
-                {personalInfo.website}
-              </a>
+          <div className="mt-4 space-y-1 text-sm text-gray-600">
+            {personalInfo.email && (
+              <div>
+                <span className="font-medium text-gray-700">{t('contactEmail')}:</span>{' '}
+                <span
+                  className={
+                    personalInfo.preferredContact === 'email' ? 'font-semibold text-gray-900' : ''
+                  }
+                >
+                  {personalInfo.email}
+                </span>
+                {personalInfo.preferredContact === 'email' && (
+                  <span className="ml-2 text-xs italic" style={{ color: accentColor }}>
+                    — {t('preferredContact').toLowerCase()}
+                  </span>
+                )}
+              </div>
             )}
-            {personalInfo.linkedin && (
-              <a
-                href={personalInfo.linkedin}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: accentColor }}
-                className="hover:opacity-80"
-              >
-                LinkedIn
-              </a>
+            {personalInfo.phone && (
+              <div>
+                <span className="font-medium text-gray-700">{t('contactPhone')}:</span>{' '}
+                <span
+                  className={
+                    personalInfo.preferredContact === 'phone' ? 'font-semibold text-gray-900' : ''
+                  }
+                >
+                  {personalInfo.phone}
+                </span>
+                {personalInfo.preferredContact === 'phone' && (
+                  <span className="ml-2 text-xs italic" style={{ color: accentColor }}>
+                    — {t('preferredContact').toLowerCase()}
+                  </span>
+                )}
+              </div>
             )}
-            {personalInfo.github && (
-              <a
-                href={personalInfo.github}
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ color: accentColor }}
-                className="hover:opacity-80"
-              >
-                GitHub
-              </a>
+            {personalInfo.telegram && (
+              <div>
+                <span className="font-medium text-gray-700">{t('contactTelegram')}:</span>{' '}
+                <span
+                  className={
+                    personalInfo.preferredContact === 'telegram'
+                      ? 'font-semibold text-gray-900'
+                      : ''
+                  }
+                >
+                  {personalInfo.telegram}
+                </span>
+                {personalInfo.preferredContact === 'telegram' && (
+                  <span className="ml-2 text-xs italic" style={{ color: accentColor }}>
+                    — {t('preferredContact').toLowerCase()}
+                  </span>
+                )}
+              </div>
             )}
-            {personalInfo.telegram && <span>{personalInfo.telegram}</span>}
           </div>
         </div>
       </header>

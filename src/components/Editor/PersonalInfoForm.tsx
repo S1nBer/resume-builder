@@ -5,6 +5,7 @@ import { useTranslation } from '../../i18n/useTranslation';
 import FormField from '../common/FormField';
 import Input from '../common/Input';
 import ErrorList from '../common/ErrorList';
+import type { PersonalInfo } from '../../types/resume';
 
 function PersonalInfoForm() {
   const personalInfo = useResumeStore((state) => state.resume.personalInfo);
@@ -202,7 +203,15 @@ function PersonalInfoForm() {
           <Input
             value={personalInfo.location}
             onChange={(e) => updatePersonalInfo({ location: e.target.value })}
-            placeholder="Москва"
+            placeholder={t('placeholderLocation')}
+          />
+        </FormField>
+
+        <FormField label={t('country')}>
+          <Input
+            value={personalInfo.country}
+            onChange={(e) => updatePersonalInfo({ country: e.target.value })}
+            placeholder={t('placeholderCountry')}
           />
         </FormField>
 
@@ -243,6 +252,46 @@ function PersonalInfoForm() {
       </div>
 
       {personalErrors.length > 0 && <ErrorList errors={personalErrors} />}
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">
+          {t('preferredContact')}
+        </label>
+        <div className="flex flex-wrap gap-4">
+          {[
+            { value: 'email', label: t('contactEmail') },
+            { value: 'phone', label: t('contactPhone') },
+            { value: 'telegram', label: t('contactTelegram') },
+          ].map((option) => (
+            <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
+              <input
+                type="radio"
+                name="preferredContact"
+                value={option.value}
+                checked={personalInfo.preferredContact === option.value}
+                onChange={() =>
+                  updatePersonalInfo({
+                    preferredContact: option.value as PersonalInfo['preferredContact'],
+                  })
+                }
+                className="text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-700">{option.label}</span>
+            </label>
+          ))}
+          <label className="flex items-center space-x-2 cursor-pointer">
+            <input
+              type="radio"
+              name="preferredContact"
+              value=""
+              checked={personalInfo.preferredContact === null}
+              onChange={() => updatePersonalInfo({ preferredContact: null })}
+              className="text-blue-600 focus:ring-blue-500"
+            />
+            <span className="text-sm text-gray-700">—</span>
+          </label>
+        </div>
+      </div>
     </div>
   );
 }
