@@ -1,0 +1,81 @@
+import { describe, it, expect, beforeEach } from 'vitest';
+import { render, screen, fireEvent } from '@testing-library/react';
+import EditorPanel from './EditorPanel';
+import { useResumeStore } from '../../store/resumeStore';
+
+describe('EditorPanel', () => {
+  beforeEach(() => {
+    useResumeStore.setState({
+      resume: {
+        personalInfo: {
+          fullName: '',
+          position: '',
+          photo: null,
+          email: '',
+          phone: '',
+          location: '',
+          country: '',
+          website: '',
+          linkedin: '',
+          github: '',
+          telegram: '',
+          preferredContact: null,
+        },
+        summary: '',
+        skills: [],
+        skillGroups: [],
+        experience: [],
+        education: [],
+        languages: [],
+        certifications: [],
+        projects: [],
+      },
+      errors: {},
+    });
+  });
+
+  it('should render all section buttons', () => {
+    render(<EditorPanel />);
+
+    expect(screen.getByRole('button', { name: /Личная информация/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /О себе/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Навыки/ })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Опыт работы/ })).toBeInTheDocument();
+  });
+
+  it('should switch to skills section', () => {
+    render(<EditorPanel />);
+
+    fireEvent.click(screen.getByText('Навыки'));
+
+    expect(screen.getByText('Список навыков')).toBeInTheDocument();
+  });
+
+  it('should show validation errors when validating empty resume', () => {
+    render(<EditorPanel />);
+
+    fireEvent.click(screen.getByText('Проверить резюме'));
+
+    expect(screen.getByText('Найдены ошибки. Пожалуйста, исправьте их.')).toBeInTheDocument();
+  });
+
+  it('should show success when resume is valid', () => {
+    useResumeStore.setState((state) => ({
+      resume: {
+        ...state.resume,
+        personalInfo: {
+          ...state.resume.personalInfo,
+          fullName: 'Иван Иванов',
+          position: 'Developer',
+          email: 'ivan@example.com',
+        },
+      },
+    }));
+
+    render(<EditorPanel />);
+
+    fireEvent.click(screen.getByText('Проверить резюме'));
+
+    expect(screen.getByText('Отлично! Резюме готово к экспорту.')).toBeInTheDocument();
+  });
+});
