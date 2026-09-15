@@ -65,4 +65,72 @@ describe('validators', () => {
 
     expect(errors.personalInfo).toBeUndefined();
   });
+
+  it('should validate experience errors', () => {
+    const resumeWithEmptyExp: Resume = {
+      ...emptyResume,
+      experience: [
+        {
+          id: '1',
+          company: '',
+          position: '',
+          location: '',
+          startDate: '',
+          endDate: '',
+          current: false,
+          description: '',
+          achievements: [],
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithEmptyExp);
+    expect(errors['experience_1']).toBeDefined();
+    expect(errors['experience_1']).toContain('Укажите компанию');
+  });
+
+  it('should validate education errors', () => {
+    const resumeWithEmptyEdu: Resume = {
+      ...emptyResume,
+      education: [
+        {
+          id: '1',
+          institution: '',
+          degree: '',
+          field: '',
+          location: '',
+          startDate: '',
+          endDate: '',
+          current: false,
+          description: '',
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithEmptyEdu);
+    expect(errors['education_1']).toBeDefined();
+    expect(errors['education_1']).toContain('Укажите учебное заведение');
+  });
+
+  it('should not return experience errors when current is true', () => {
+    const resumeWithCurrentExp: Resume = {
+      ...emptyResume,
+      experience: [
+        {
+          id: '1',
+          company: 'Google',
+          position: 'Developer',
+          location: '',
+          startDate: '2020-01',
+          endDate: '',
+          current: true,
+          description: '',
+          achievements: [],
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithCurrentExp);
+    expect(errors['experience_1']).toBeUndefined();
+  });
 });
