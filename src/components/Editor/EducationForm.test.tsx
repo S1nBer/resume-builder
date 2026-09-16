@@ -81,4 +81,68 @@ describe('EducationForm', () => {
     const state = useResumeStore.getState();
     expect(state.resume.education).toHaveLength(0);
   });
+
+  it('should update degree', () => {
+    useResumeStore.getState().addEducation();
+
+    render(<EducationForm />);
+
+    const input = screen.getByPlaceholderText('Бакалавр');
+    fireEvent.change(input, { target: { value: 'Магистр' } });
+
+    const state = useResumeStore.getState();
+    expect(state.resume.education[0].degree).toBe('Магистр');
+  });
+
+  it('should update field of study', () => {
+    useResumeStore.getState().addEducation();
+
+    render(<EducationForm />);
+
+    const input = screen.getByPlaceholderText('Компьютерные науки');
+    fireEvent.change(input, { target: { value: 'Математика' } });
+
+    const state = useResumeStore.getState();
+    expect(state.resume.education[0].field).toBe('Математика');
+  });
+
+  it('should update location', () => {
+    useResumeStore.getState().addEducation();
+
+    render(<EducationForm />);
+
+    const input = screen.getByPlaceholderText('Москва');
+    fireEvent.change(input, { target: { value: 'Казань' } });
+
+    const state = useResumeStore.getState();
+    expect(state.resume.education[0].location).toBe('Казань');
+  });
+
+  it('should update description', () => {
+    useResumeStore.getState().addEducation();
+
+    render(<EducationForm />);
+
+    const textarea = screen.getByPlaceholderText('Достижения, курсовые работы...');
+    fireEvent.change(textarea, { target: { value: 'Красный диплом' } });
+
+    const state = useResumeStore.getState();
+    expect(state.resume.education[0].description).toBe('Красный диплом');
+  });
+
+  it('should update start date', () => {
+    useResumeStore.getState().addEducation();
+
+    render(<EducationForm />);
+
+    const inputs = screen.getAllByDisplayValue('');
+    const monthInputs = inputs.filter((input) => input.getAttribute('type') === 'month');
+
+    if (monthInputs[0]) {
+      fireEvent.change(monthInputs[0], { target: { value: '2020-09' } });
+    }
+
+    const state = useResumeStore.getState();
+    expect(state.resume.education[0].startDate).toBe('2020-09');
+  });
 });

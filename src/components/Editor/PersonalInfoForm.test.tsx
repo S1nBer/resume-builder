@@ -152,4 +152,57 @@ describe('PersonalInfoForm', () => {
     const state = useResumeStore.getState();
     expect(state.resume.personalInfo.preferredContact).toBe('email');
   });
+
+  it('should remove photo when clicking delete', () => {
+    useResumeStore.setState((state) => ({
+      resume: {
+        ...state.resume,
+        personalInfo: { ...state.resume.personalInfo, photo: 'data:image/png;base64,test' },
+      },
+    }));
+
+    render(<PersonalInfoForm />);
+
+    fireEvent.click(screen.getByText('Удалить'));
+
+    const state = useResumeStore.getState();
+    expect(state.resume.personalInfo.photo).toBeNull();
+  });
+
+  it('should select phone as preferred contact', () => {
+    render(<PersonalInfoForm />);
+
+    const radios = screen.getAllByRole('radio');
+    fireEvent.click(radios[1]);
+
+    const state = useResumeStore.getState();
+    expect(state.resume.personalInfo.preferredContact).toBe('phone');
+  });
+
+  it('should select telegram as preferred contact', () => {
+    render(<PersonalInfoForm />);
+
+    const radios = screen.getAllByRole('radio');
+    fireEvent.click(radios[2]);
+
+    const state = useResumeStore.getState();
+    expect(state.resume.personalInfo.preferredContact).toBe('telegram');
+  });
+
+  it('should reset preferred contact to null', () => {
+    useResumeStore.setState((state) => ({
+      resume: {
+        ...state.resume,
+        personalInfo: { ...state.resume.personalInfo, preferredContact: 'email' },
+      },
+    }));
+
+    render(<PersonalInfoForm />);
+
+    const radios = screen.getAllByRole('radio');
+    fireEvent.click(radios[3]);
+
+    const state = useResumeStore.getState();
+    expect(state.resume.personalInfo.preferredContact).toBeNull();
+  });
 });

@@ -47,4 +47,41 @@ describe('pdfGenerator', () => {
 
     document.body.removeChild(element);
   });
+
+  it('should handle multi-page PDF', async () => {
+    const element = document.createElement('div');
+    element.id = 'multi-page-element';
+    document.body.appendChild(element);
+
+    const mockCanvas = {
+      width: 800,
+      height: 3000,
+      toDataURL: () => 'data:image/png;base64,test',
+    } as HTMLCanvasElement;
+
+    vi.mocked(html2canvas).mockResolvedValue(mockCanvas);
+
+    await exportToPdf('multi-page-element', 'multi.pdf');
+
+    expect(html2canvas).toHaveBeenCalled();
+
+    document.body.removeChild(element);
+  });
+
+  it('should handle errors gracefully', async () => {
+    const element = document.createElement('div');
+    element.id = 'error-element';
+    document.body.appendChild(element);
+
+    vi.mocked(html2canvas).mockRejectedValue(new Error('Canvas error'));
+
+    const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+
+    await exportToPdf('error-element', 'error.pdf');
+
+    expect(consoleSpy).toHaveBeenCalledWith('Error generating PDF:', expect.any(Error));
+
+    consoleSpy.mockRestore();
+    document.body.removeChild(element);
+  });
 });

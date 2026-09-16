@@ -133,4 +133,83 @@ describe('validators', () => {
     const errors = validateResume(resumeWithCurrentExp);
     expect(errors['experience_1']).toBeUndefined();
   });
+
+  it('should validate email with different formats', () => {
+    expect(isValidEmail('a@b.co')).toBe(true);
+    expect(isValidEmail('user.name+tag@example.com')).toBe(true);
+    expect(isValidEmail('user@domain')).toBe(false);
+    expect(isValidEmail('@domain.com')).toBe(false);
+  });
+
+  it('should validate phone with different formats', () => {
+    expect(isValidPhone('+1 (555) 123-4567')).toBe(true);
+    expect(isValidPhone('+44 20 1234 5678')).toBe(true);
+    expect(isValidPhone('abc')).toBe(false);
+  });
+
+  it('should not return experience errors for valid entry', () => {
+    const resumeWithValidExp: Resume = {
+      ...emptyResume,
+      experience: [
+        {
+          id: '1',
+          company: 'Google',
+          position: 'Developer',
+          location: 'Moscow',
+          startDate: '2020-01',
+          endDate: '2023-01',
+          current: false,
+          description: 'Worked on search',
+          achievements: [],
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithValidExp);
+    expect(errors['experience_1']).toBeUndefined();
+  });
+
+  it('should not return education errors for valid entry', () => {
+    const resumeWithValidEdu: Resume = {
+      ...emptyResume,
+      education: [
+        {
+          id: '1',
+          institution: 'MSU',
+          degree: 'Bachelor',
+          field: 'CS',
+          location: 'Moscow',
+          startDate: '2016-09',
+          endDate: '2020-06',
+          current: false,
+          description: '',
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithValidEdu);
+    expect(errors['education_1']).toBeUndefined();
+  });
+
+  it('should validate current education without end date', () => {
+    const resumeWithCurrentEdu: Resume = {
+      ...emptyResume,
+      education: [
+        {
+          id: '1',
+          institution: 'MSU',
+          degree: 'Master',
+          field: 'CS',
+          location: 'Moscow',
+          startDate: '2020-09',
+          endDate: '',
+          current: true,
+          description: '',
+        },
+      ],
+    };
+
+    const errors = validateResume(resumeWithCurrentEdu);
+    expect(errors['education_1']).toBeUndefined();
+  });
 });
