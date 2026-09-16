@@ -7,7 +7,7 @@ export default defineConfig({
   base: '/resume-builder/',
   test: {
     globals: true,
-    environment: 'jsdom',
+    environment: 'happy-dom',
     setupFiles: './src/test/setup.ts',
     css: true,
     coverage: {
@@ -19,7 +19,7 @@ export default defineConfig({
         '**/*.test.{ts,tsx}',
         '**/*.d.ts',
         '**/types/**',
-        '**/templates/**', // Шаблоны можно исключить, если не тестируем их полностью
+        '**/templates/**',
       ],
       thresholds: {
         lines: 80,
