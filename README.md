@@ -1,5 +1,90 @@
 # Resume Builder
 
+## EN English
+
+📝 Resume builder with live preview and PDF export.
+
+## 🌐 Demo
+
+Open project: [https://s1nber.github.io/resume-builder/](https://s1nber.github.io/resume-builder/)
+
+## ✨ Features
+
+- **Resume editor** — fill in all the necessary sections
+- **Personal info** — name, position, contacts, photo
+- **Drag-and-drop photo** — drag an image to upload
+- **Work experience** — add unlimited work places
+- **Education** — institutions, degrees, fields of study
+- **Skills** — simple list or grouped by categories
+- **Languages** — languages with proficiency level
+- **Certifications** — professional certificates and courses
+- **Projects** — your projects with descriptions and technologies
+- **Live preview** — see instantly how the resume will look
+- **Three templates** — Modern, Classic, Minimal
+- **Color accents** — choose a color for each template
+- **Drag-and-drop sections** — change the order and visibility of sections
+- **Localization** — Russian and English interface
+- **PDF export** — download the finished resume in one click
+- **Validation** — required fields check
+- **Autosave** — data is saved in localStorage
+
+## 🎨 Templates
+
+### Modern
+
+- Photo on the left, info on the right
+- Color accents
+- Icons for contacts
+- Skills as "chips"
+- Perfect for IT specialists, designers, marketers
+
+### Classic
+
+- Centered header
+- Photo in a round frame in the center
+- Serif font
+- Uppercase headings
+- Strict, conservative look
+- Perfect for lawyers, financiers, government positions
+
+### Minimal
+
+- Minimalist design
+- Photo in a square frame
+- Thin lines
+- Lots of whitespace, spacious layout
+- Perfect for creative professions, startups
+
+## 🛠️ Tech Stack
+
+- **React 18** — UI library
+- **TypeScript** — type safety
+- **Vite** — build tool
+- **Tailwind CSS** — styling
+- **Zustand** — state management
+- **html2canvas-pro** — HTML to image conversion
+- **jsPDF** — PDF generation
+- **@dnd-kit** — drag-and-drop
+- **ESLint** — linter
+- **Prettier** — code formatting
+
+## 📦 Installation
+
+````bash
+# Clone the repository
+git clone https://github.com/s1nber/resume-builder.git
+
+# Go to the project directory
+cd resume-builder
+
+# Install dependencies
+npm install
+
+# Start the project
+npm run dev
+
+## 🇷🇺 Русский
+
 📝 Конструктор резюме с предпросмотром в реальном времени и экспортом в PDF.
 
 ## 🌐 Демо
@@ -80,4 +165,4 @@ npm install
 
 # Запустите проект
 npm run dev
-```
+````
