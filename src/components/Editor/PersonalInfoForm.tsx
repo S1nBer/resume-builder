@@ -1,10 +1,12 @@
-import { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
+import React, { useRef, useState, type ChangeEvent, type DragEvent } from 'react';
 import { useResumeStore } from '../../store/resumeStore';
 import { isValidEmail, isValidPhone } from '../../utils/validators';
 import { useTranslation } from '../../i18n/useTranslation';
 import FormField from '../common/FormField';
 import Input from '../common/Input';
 import ErrorList from '../common/ErrorList';
+import { extractTextFromPdf } from '../../utils/pdfParser';
+import { parseContacts } from '../../utils/contactParser';
 import type { PersonalInfo } from '../../types/resume';
 
 function PersonalInfoForm() {
@@ -84,6 +86,31 @@ function PersonalInfoForm() {
     setErrors(updatedErrors);
   };
 
+  const handlePdfUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      const text = await extractTextFromPdf(file);
+      const parsedContacts = parseContacts(text);
+
+      // Обновляем данные в сторе
+      updatePersonalInfo({
+        email: parsedContacts.email || personalInfo.email,
+        phone: parsedContacts.phone || personalInfo.phone,
+        github: parsedContacts.github || personalInfo.github,
+        telegram: parsedContacts.telegram || personalInfo.telegram,
+        linkedin: parsedContacts.linkedin || personalInfo.linkedin,
+        website: parsedContacts.website || personalInfo.website,
+      });
+
+      alert('Данные из PDF успешно распознаны!');
+    } catch (error) {
+      console.error(error);
+      alert('Ошибка при чтении PDF');
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-900">{t('personalInfo')}</h2>
@@ -148,6 +175,13 @@ function PersonalInfoForm() {
           onChange={handlePhotoChange}
           className="hidden"
         />
+      </div>
+
+      <div className="flex justify-end mb-4">
+        <label className="cursor-pointer bg-blue-50 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-100 transition-colors text-sm font-medium">
+          Импортировать из PDF
+          <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
+        </label>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
