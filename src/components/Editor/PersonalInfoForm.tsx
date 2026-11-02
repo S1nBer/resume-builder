@@ -7,6 +7,7 @@ import Input from '../common/Input';
 import ErrorList from '../common/ErrorList';
 import { extractTextFromPdf } from '../../utils/pdfParser';
 import { parseContacts } from '../../utils/contactParser';
+import { parseResumeWithAI } from '../../utils/pdfParser';
 import type { PersonalInfo } from '../../types/resume';
 
 function PersonalInfoForm() {
@@ -111,6 +112,65 @@ function PersonalInfoForm() {
     }
   };
 
+  const [isParsing, setIsParsing] = useState(false);
+
+  const handleAiParse = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsParsing(true);
+      // 1. Извлекаем текст из PDF
+      const text = await extractTextFromPdf(file);
+
+      // 2. Отправляем в наш бэкенд (Vercel Function), которая делает запрос к OpenRouter
+      const aiData = await parseResumeWithAI(text);
+
+      console.log('Ответ от ИИ:', aiData); // Посмотрим, что вернула модель
+
+      // 3. Заполняем данные в сторе
+      if (aiData) {
+        updatePersonalInfo({
+          fullName: aiData.fullName || personalInfo.fullName,
+          position: aiData.position || personalInfo.position,
+          // Контакты ИИ тоже может вытащить, если мы попросим в промпте
+        });
+
+        // Если ИИ вернул опыт, навыки и т.д., мы обновим их через стор
+        if (aiData.experience && Array.isArray(aiData.experience)) {
+          useResumeStore.setState((state) => ({
+            resume: { ...state.resume, experience: aiData.experience },
+          }));
+        }
+
+        if (aiData.education && Array.isArray(aiData.education)) {
+          useResumeStore.setState((state) => ({
+            resume: { ...state.resume, education: aiData.education },
+          }));
+        }
+
+        if (aiData.skills && Array.isArray(aiData.skills)) {
+          useResumeStore.setState((state) => ({
+            resume: {
+              ...state.resume,
+              skills: aiData.skills.map((name: string) => ({
+                id: Math.random().toString(36).slice(2, 9),
+                name,
+              })),
+            },
+          }));
+        }
+
+        alert('ИИ успешно распознал резюме!');
+      }
+    } catch (error) {
+      console.error(error);
+      alert('Ошибка при обработке ИИ. Проверь консоль и вкладку Network.');
+    } finally {
+      setIsParsing(false);
+    }
+  };
+
   return (
     <div className="space-y-4">
       <h2 className="text-lg font-semibold text-gray-900">{t('personalInfo')}</h2>
@@ -183,6 +243,22 @@ function PersonalInfoForm() {
           <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
         </label>
       </div>
+      <label
+        className={`cursor-pointer px-4 py-2 rounded-md transition-colors text-sm font-medium ${
+          isParsing
+            ? 'bg-blue-300 text-white cursor-not-allowed'
+            : 'bg-blue-600 text-white hover:bg-blue-700'
+        }`}
+      >
+        {isParsing ? 'ИИ анализирует...' : 'Заполнить всё с помощью ИИ'}
+        <input
+          type="file"
+          accept=".pdf"
+          onChange={handleAiParse}
+          className="hidden"
+          disabled={isParsing}
+        />
+      </label>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField label={t('fullName')} required>

@@ -18,3 +18,18 @@ export async function extractTextFromPdf(file: File): Promise<string> {
     throw new Error('Не удалось прочитать PDF файл');
   }
 }
+
+export async function parseResumeWithAI(text: string) {
+  const response = await fetch('/api/parse-resume', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ text }),
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || 'Failed to parse resume with AI');
+  }
+
+  return await response.json();
+}
