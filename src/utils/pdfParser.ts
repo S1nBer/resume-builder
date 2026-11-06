@@ -1,5 +1,44 @@
 import { extractText, getDocumentProxy } from 'unpdf';
 
+export interface AiExperience {
+  position?: string;
+  company?: string;
+  start_date?: string;
+  end_date?: string;
+  startDate?: string;
+  endDate?: string;
+  description?: string;
+  achievements?: string[];
+}
+
+export interface AiEducation {
+  institution?: string;
+  degree?: string;
+  field?: string;
+  start_date?: string;
+  end_date?: string;
+  startDate?: string;
+  endDate?: string;
+}
+
+export interface AiResumeData {
+  fullName?: string;
+  position?: string;
+  personal_info?: {
+    full_name?: string;
+    email?: string;
+    phone?: string;
+    location?: string;
+  };
+  professional_objectives?: {
+    desired_position?: string;
+  };
+  experience?: AiExperience[];
+  education?: AiEducation[];
+  skills?: string[];
+  technical_skills?: string[];
+}
+
 export async function extractTextFromPdf(file: File): Promise<string> {
   try {
     const arrayBuffer = await file.arrayBuffer();
@@ -19,7 +58,7 @@ export async function extractTextFromPdf(file: File): Promise<string> {
   }
 }
 
-export async function parseResumeWithAI(text: string) {
+export async function parseResumeWithAI(text: string): Promise<AiResumeData> {
   const response = await fetch('/api/parse-resume', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },

@@ -7,7 +7,7 @@ import Input from '../common/Input';
 import ErrorList from '../common/ErrorList';
 import { extractTextFromPdf } from '../../utils/pdfParser';
 import { parseContacts } from '../../utils/contactParser';
-import { parseResumeWithAI } from '../../utils/pdfParser';
+import { parseResumeWithAI, type AiResumeData } from '../../utils/pdfParser';
 import type { PersonalInfo } from '../../types/resume';
 
 function PersonalInfoForm() {
@@ -17,6 +17,7 @@ function PersonalInfoForm() {
   const setErrors = useResumeStore((state) => state.setErrors);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
+  const [isParsing, setIsParsing] = useState(false);
   const { t } = useTranslation();
 
   const personalErrors = errors.personalInfo || [];
@@ -112,7 +113,7 @@ function PersonalInfoForm() {
     }
   };
 
-  const [isParsing, setIsParsing] = useState(false);
+  const generateId = () => Math.random().toString(36).slice(2, 11);
 
   const handleAiParse = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -120,41 +121,69 @@ function PersonalInfoForm() {
 
     try {
       setIsParsing(true);
-      // 1. Извлекаем текст из PDF
+      // Извлекаем текст из PDF
       const text = await extractTextFromPdf(file);
 
-      // 2. Отправляем в наш бэкенд (Vercel Function), которая делает запрос к OpenRouter
-      const aiData = await parseResumeWithAI(text);
+      const aiData: AiResumeData = await parseResumeWithAI(text);
 
-      console.log('Ответ от ИИ:', aiData); // Посмотрим, что вернула модель
+      console.log('Ответ от ИИ:', aiData);
 
-      // 3. Заполняем данные в сторе
       if (aiData) {
         updatePersonalInfo({
-          fullName: aiData.fullName || personalInfo.fullName,
-          position: aiData.position || personalInfo.position,
-          // Контакты ИИ тоже может вытащить, если мы попросим в промпте
+          fullName: aiData.fullName || aiData.personal_info?.full_name || personalInfo.fullName,
+          position:
+            aiData.position ||
+            aiData.professional_objectives?.desired_position ||
+            personalInfo.position,
+          email: aiData.personal_info?.email || personalInfo.email,
+          phone: aiData.personal_info?.phone || personalInfo.phone,
         });
 
-        // Если ИИ вернул опыт, навыки и т.д., мы обновим их через стор
         if (aiData.experience && Array.isArray(aiData.experience)) {
           useResumeStore.setState((state) => ({
-            resume: { ...state.resume, experience: aiData.experience },
+            resume: {
+              ...state.resume,
+              experience: aiData.experience!.map((exp) => ({
+                id: generateId(),
+                company: exp.company || '',
+                position: exp.position || '',
+                location: '',
+                startDate: exp.start_date || exp.startDate || '',
+                endDate: exp.end_date || exp.endDate || '',
+                current: false,
+                description: exp.description || '',
+                achievements: exp.achievements || [],
+              })),
+            },
           }));
         }
 
         if (aiData.education && Array.isArray(aiData.education)) {
           useResumeStore.setState((state) => ({
-            resume: { ...state.resume, education: aiData.education },
+            resume: {
+              ...state.resume,
+              education: aiData.education!.map((edu) => ({
+                id: generateId(),
+                institution: edu.institution || '',
+                degree: edu.degree || '',
+                field: edu.field || '',
+                location: '',
+                startDate: edu.start_date || edu.startDate || '',
+                endDate: edu.end_date || edu.endDate || '',
+                current: false,
+                description: '',
+              })),
+            },
           }));
         }
 
-        if (aiData.skills && Array.isArray(aiData.skills)) {
+        const skillsArray = aiData.skills || aiData.technical_skills;
+        if (skillsArray && Array.isArray(skillsArray)) {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              skills: aiData.skills.map((name: string) => ({
-                id: Math.random().toString(36).slice(2, 9),
+              skills: skillsArray.map((name) => ({
+                id: generateId(),
                 name,
               })),
             },
