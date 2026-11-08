@@ -1,5 +1,3 @@
-// Основные типы для резюме
-
 export interface PersonalInfo {
   fullName: string;
   position: string;

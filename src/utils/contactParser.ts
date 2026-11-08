@@ -23,7 +23,6 @@ export function parseContacts(text: string): ParsedContacts {
     /(?:\+?\d{1,3}[-.\s]?)?\(?\d{1,4}\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,4}/g;
   const phoneMatches = text.match(phoneRegex);
   if (phoneMatches) {
-    // Ищем самый длинный похожий на телефон (от 10 цифр)
     for (const match of phoneMatches) {
       const digits = match.replace(/\D/g, '');
       if (digits.length >= 10 && digits.length <= 15) {

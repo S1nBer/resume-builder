@@ -1,5 +1,5 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import { randomUUID } from 'crypto'; // Нужно для RqUID
+import { randomUUID } from 'crypto';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
@@ -24,7 +24,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         Authorization: `Basic ${authKey}`,
       },
       body: new URLSearchParams({
-        scope: 'GIGACHAT_API_PERS', // Для физлиц
+        scope: 'GIGACHAT_API_PERS',
       }),
     });
 

@@ -12,7 +12,6 @@ export async function exportToPdf(elementId: string, filename = 'resume.pdf'): P
   }
 
   try {
-    // Показываем индикатор загрузки
     const loadingIndicator = document.createElement('div');
     loadingIndicator.textContent = 'Генерация PDF...';
     loadingIndicator.style.cssText = `
@@ -75,16 +74,13 @@ export async function exportToPdf(elementId: string, filename = 'resume.pdf'): P
       );
     }
 
-    // Сохраняем PDF
     pdf.save(filename);
 
-    // Убираем индикатор загрузки
     document.body.removeChild(loadingIndicator);
   } catch (error) {
     // eslint-disable-next-line no-console
     console.error('Error generating PDF:', error);
 
-    // Убираем индикатор загрузки в случае ошибки
     const loadingIndicator = document.querySelector('div');
 
     if (loadingIndicator && loadingIndicator.textContent === 'Генерация PDF...') {
