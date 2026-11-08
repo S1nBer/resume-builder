@@ -56,6 +56,12 @@ function EditorPanel() {
     }
   };
 
+  const resetResume = () => {
+    if (window.confirm('Вы уверены, что хотите удалить все данные резюме?')) {
+      useResumeStore.getState().resetResume();
+    }
+  };
+
   const renderSection = () => {
     switch (activeSection) {
       case 'personal':
@@ -104,6 +110,13 @@ function EditorPanel() {
         </div>
 
         <div className="mt-4 flex justify-end">
+          <button
+            type="button"
+            onClick={resetResume}
+            className="px-4 py-2 mr-4 text-sm font-medium text-red-600 bg-red-50 rounded-md hover:bg-red-100 transition-colors"
+          >
+            Очистить всё
+          </button>
           <button
             type="button"
             onClick={handleValidate}
