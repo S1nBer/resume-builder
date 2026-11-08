@@ -1,14 +1,11 @@
 import { extractText, getDocumentProxy } from 'unpdf';
 
 export interface AiExperience {
-  position?: string;
   company?: string;
-  start_date?: string;
-  end_date?: string;
+  position?: string;
   startDate?: string;
   endDate?: string;
-  description?: string;
-  achievements?: string[];
+  description?: string | string[];
 }
 
 export interface AiEducation {

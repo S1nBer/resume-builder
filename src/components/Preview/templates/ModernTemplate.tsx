@@ -68,9 +68,14 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
                       </p>
                     </div>
                     {exp.description && (
-                      <p className="mt-2 text-gray-700 text-sm leading-relaxed">
-                        {exp.description}
-                      </p>
+                      <p className="mt-2 text-gray-700 text-sm">{exp.description}</p>
+                    )}
+                    {exp.achievements.length > 0 && (
+                      <ul className="mt-1 list-disc list-inside text-sm text-gray-700">
+                        {exp.achievements.map((ach, i) => (
+                          <li key={i}>{ach}</li>
+                        ))}
+                      </ul>
                     )}
                   </div>
                 ))}

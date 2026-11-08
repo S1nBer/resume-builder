@@ -48,8 +48,34 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         messages: [
           {
             role: 'system',
-            content:
-              'Ты — парсер резюме. Твоя задача — извлечь данные из текста и вернуть их ТОЛЬКО в формате строгого JSON. Не добавляй никаких пояснений, приветствий или markdown-разметки (например, ```json). Ответ должен начинаться с { и заканчиваться }.',
+            content: `Ты — парсер резюме. Извлеки данные и верни их СТРОГО в формате JSON без markdown-разметки.
+              Используй ТОЛЬКО эти ключи:
+              {
+                "fullName": "Имя Фамилия",
+                "position": "Желаемая должность",
+                "email": "email@example.com",
+                "phone": "+7...",
+                "location": "Город",
+                "experience": [
+                  {
+                    "company": "Компания",
+                    "position": "Должность",
+                    "startDate": "YYYY-MM", 
+                    "endDate": "YYYY-MM", 
+                    "description": ["Достижение 1", "Достижение 2", "Обязанность 3"]
+                  }
+                ],
+                "education": [
+                  {
+                    "institution": "ВУЗ",
+                    "degree": "Степень",
+                    "field": "Специальность",
+                    "startDate": "YYYY-MM",
+                    "endDate": "YYYY-MM"
+                  }
+                ],
+                "skills": ["навык1", "навык2"]
+              }`,
           },
           {
             role: 'user',

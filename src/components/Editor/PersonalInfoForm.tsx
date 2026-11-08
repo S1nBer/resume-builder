@@ -143,17 +143,26 @@ function PersonalInfoForm() {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              experience: aiData.experience!.map((exp) => ({
-                id: generateId(),
-                company: exp.company || '',
-                position: exp.position || '',
-                location: '',
-                startDate: exp.start_date || exp.startDate || '',
-                endDate: exp.end_date || exp.endDate || '',
-                current: false,
-                description: exp.description || '',
-                achievements: exp.achievements || [],
-              })),
+              experience: aiData.experience!.map((exp) => {
+                let descArray: string[] = [];
+                if (Array.isArray(exp.description)) {
+                  descArray = exp.description;
+                } else if (typeof exp.description === 'string') {
+                  descArray = exp.description.split(/\n|\.\s/).filter(Boolean);
+                }
+
+                return {
+                  id: generateId(),
+                  company: exp.company || '',
+                  position: exp.position || '',
+                  location: '',
+                  startDate: exp.startDate || '',
+                  endDate: exp.endDate || '',
+                  current: false,
+                  description: descArray[0] || '',
+                  achievements: descArray.slice(1),
+                };
+              }),
             },
           }));
         }
