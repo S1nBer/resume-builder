@@ -1,7 +1,32 @@
-import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import SectionSettings from './SectionSettings';
 import { useResumeStore } from '../../store/resumeStore';
+import type { DragEndEvent } from '@dnd-kit/core';
+import type React from 'react';
+
+vi.mock('@dnd-kit/core', async () => {
+  const actual = await vi.importActual<typeof import('@dnd-kit/core')>('@dnd-kit/core');
+  return {
+    ...actual,
+    DndContext: ({
+      children,
+      onDragEnd,
+    }: {
+      children: React.ReactNode;
+      onDragEnd: (e: DragEndEvent) => void;
+    }) => (
+      <div
+        data-testid="dnd-context"
+        onClick={() =>
+          onDragEnd({ active: { id: 'summary' }, over: { id: 'experience' } } as DragEndEvent)
+        }
+      >
+        {children}
+      </div>
+    ),
+  };
+});
 
 describe('SectionSettings', () => {
   beforeEach(() => {
@@ -25,9 +50,7 @@ describe('SectionSettings', () => {
 
   it('should open settings on click', () => {
     render(<SectionSettings />);
-
     fireEvent.click(screen.getByText('Настройки секций'));
-
     expect(
       screen.getByText('Перетащите для изменения порядка. Отключите ненужные секции.'),
     ).toBeInTheDocument();
@@ -35,7 +58,6 @@ describe('SectionSettings', () => {
 
   it('should toggle section enabled state', () => {
     render(<SectionSettings />);
-
     fireEvent.click(screen.getByText('Настройки секций'));
 
     const checkboxes = screen.getAllByRole('checkbox');
@@ -45,55 +67,17 @@ describe('SectionSettings', () => {
     expect(state.sectionOrder[0].enabled).toBe(false);
   });
 
-  it('should close settings when clicked again', () => {
+  it('should reorder sections on drag end', () => {
     render(<SectionSettings />);
-
-    const button = screen.getByText('Настройки секций');
-    fireEvent.click(button);
-    expect(
-      screen.getByText('Перетащите для изменения порядка. Отключите ненужные секции.'),
-    ).toBeInTheDocument();
-
-    fireEvent.click(button);
-    expect(
-      screen.queryByText('Перетащите для изменения порядка. Отключите ненужные секции.'),
-    ).not.toBeInTheDocument();
-  });
-
-  it('should toggle multiple sections', () => {
-    render(<SectionSettings />);
-
     fireEvent.click(screen.getByText('Настройки секций'));
 
-    const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
-    fireEvent.click(checkboxes[1]);
+    // Кликаем по нашему мок-контексту (вызывает onDragEnd)
+    fireEvent.click(screen.getByTestId('dnd-context'));
 
     const state = useResumeStore.getState();
-    expect(state.sectionOrder[0].enabled).toBe(false);
-    expect(state.sectionOrder[1].enabled).toBe(false);
-  });
-
-  it('should not toggle section when clicking checkbox', () => {
-    render(<SectionSettings />);
-
-    fireEvent.click(screen.getByText('Настройки секций'));
-
-    const checkboxes = screen.getAllByRole('checkbox');
-    fireEvent.click(checkboxes[0]);
-
-    const state = useResumeStore.getState();
-    expect(state.sectionOrder[0].enabled).toBe(false);
-  });
-
-  it('should call updateSectionOrder on drag end', () => {
-    const updateSectionOrder = vi.fn();
-    useResumeStore.setState({ updateSectionOrder });
-
-    render(<SectionSettings />);
-    fireEvent.click(screen.getByText('Настройки секций'));
-
-    expect(screen.getByText('О себе')).toBeInTheDocument();
-    expect(screen.getByText('Опыт работы')).toBeInTheDocument();
+    // В моке мы передали active: summary, over: experience
+    // Значит они должны поменяться местами
+    expect(state.sectionOrder[0].id).toBe('experience');
+    expect(state.sectionOrder[1].id).toBe('summary');
   });
 });

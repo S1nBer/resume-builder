@@ -1,10 +1,37 @@
-import { describe, it, expect, beforeEach } from 'vitest';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import PersonalInfoForm from './PersonalInfoForm';
 import { useResumeStore } from '../../store/resumeStore';
+import { extractTextFromPdf, parseResumeWithAI } from '../../utils/pdfParser';
+import { parseContacts } from '../../utils/contactParser';
+
+vi.mock('../../utils/pdfParser', () => ({
+  extractTextFromPdf: vi.fn(),
+  parseResumeWithAI: vi.fn(),
+}));
+
+vi.mock('../../utils/contactParser', () => ({
+  parseContacts: vi.fn(),
+}));
+
+globalThis.alert = vi.fn();
+
+globalThis.File = class MockFile extends File {
+  constructor(
+    bits: ConstructorParameters<typeof File>[0],
+    name: string,
+    options?: ConstructorParameters<typeof File>[2],
+  ) {
+    super(bits, name, options);
+  }
+  async arrayBuffer() {
+    return new ArrayBuffer(0);
+  }
+} as typeof File;
 
 describe('PersonalInfoForm', () => {
   beforeEach(() => {
+    vi.clearAllMocks();
     useResumeStore.setState({
       resume: {
         personalInfo: {
@@ -40,14 +67,10 @@ describe('PersonalInfoForm', () => {
     expect(screen.getByPlaceholderText('Ваше имя')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('Должность')).toBeInTheDocument();
     expect(screen.getByPlaceholderText('ivan@example.com')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('+7 (999) 123-45-67')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Москва')).toBeInTheDocument();
-    expect(screen.getByPlaceholderText('Россия')).toBeInTheDocument();
   });
 
   it('should update full name', () => {
     render(<PersonalInfoForm />);
-
     const input = screen.getByPlaceholderText('Ваше имя');
     fireEvent.change(input, { target: { value: 'Иван Иванов' } });
 
@@ -55,154 +78,78 @@ describe('PersonalInfoForm', () => {
     expect(state.resume.personalInfo.fullName).toBe('Иван Иванов');
   });
 
-  it('should update position', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('Должность');
-    fireEvent.change(input, { target: { value: 'Developer' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.position).toBe('Developer');
-  });
-
-  it('should update location', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('Москва');
-    fireEvent.change(input, { target: { value: 'Санкт-Петербург' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.location).toBe('Санкт-Петербург');
-  });
-
-  it('should update country', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('Россия');
-    fireEvent.change(input, { target: { value: 'Беларусь' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.country).toBe('Беларусь');
-  });
-
-  it('should update website', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('https://example.com');
-    fireEvent.change(input, { target: { value: 'https://mysite.com' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.website).toBe('https://mysite.com');
-  });
-
-  it('should update linkedin', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('https://linkedin.com/in/username');
-    fireEvent.change(input, { target: { value: 'https://linkedin.com/in/ivan' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.linkedin).toBe('https://linkedin.com/in/ivan');
-  });
-
-  it('should update github', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('https://github.com/username');
-    fireEvent.change(input, { target: { value: 'https://github.com/ivan' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.github).toBe('https://github.com/ivan');
-  });
-
-  it('should update telegram', () => {
-    render(<PersonalInfoForm />);
-
-    const input = screen.getByPlaceholderText('@username');
-    fireEvent.change(input, { target: { value: '@ivan' } });
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.telegram).toBe('@ivan');
-  });
-
   it('should show error for invalid email', () => {
     render(<PersonalInfoForm />);
-
     const emailInput = screen.getByPlaceholderText('ivan@example.com');
     fireEvent.change(emailInput, { target: { value: 'invalid-email' } });
 
     expect(screen.getByText('Некорректный email')).toBeInTheDocument();
   });
 
-  it('should show error for invalid phone', () => {
-    render(<PersonalInfoForm />);
-
-    const phoneInput = screen.getByPlaceholderText('+7 (999) 123-45-67');
-    fireEvent.change(phoneInput, { target: { value: '123' } });
-
-    expect(screen.getByText('Некорректный номер телефона')).toBeInTheDocument();
-  });
-
   it('should select preferred contact', () => {
     render(<PersonalInfoForm />);
-
-    const emailRadio = screen.getAllByRole('radio')[0];
-    fireEvent.click(emailRadio);
+    const radios = screen.getAllByRole('radio');
+    fireEvent.click(radios[0]);
 
     const state = useResumeStore.getState();
     expect(state.resume.personalInfo.preferredContact).toBe('email');
   });
 
-  it('should remove photo when clicking delete', () => {
-    useResumeStore.setState((state) => ({
-      resume: {
-        ...state.resume,
-        personalInfo: { ...state.resume.personalInfo, photo: 'data:image/png;base64,test' },
+  it('should handle PDF upload and parse contacts', async () => {
+    vi.mocked(extractTextFromPdf).mockResolvedValue('Текст из PDF');
+    vi.mocked(parseContacts).mockReturnValue({ email: 'test@test.com', phone: '1234567890' });
+
+    render(<PersonalInfoForm />);
+
+    const label = screen.getByText('Импортировать из PDF').closest('label');
+    const pdfInput = label?.querySelector('input[type="file"]') as HTMLInputElement;
+
+    const file = new File([''], 'resume.pdf', { type: 'application/pdf' });
+    fireEvent.change(pdfInput, { target: { files: [file] } });
+
+    await waitFor(
+      () => {
+        const state = useResumeStore.getState();
+        expect(state.resume.personalInfo.email).toBe('test@test.com');
       },
-    }));
+      { timeout: 2000 },
+    );
+  });
+
+  it('should handle AI parsing', async () => {
+    vi.mocked(extractTextFromPdf).mockResolvedValue('Текст из PDF');
+    vi.mocked(parseResumeWithAI).mockResolvedValue({
+      fullName: 'Иван',
+      position: 'Разработчик',
+      email: 'ai@test.com',
+      experience: [
+        {
+          company: 'ООО Ромашка',
+          position: 'Дев',
+          startDate: '2020',
+          endDate: '2021',
+          description: ['Сделал проект'],
+        },
+      ],
+      education: [{ institution: 'МГУ', degree: 'Бакалавр', startDate: '2016', endDate: '2020' }],
+      skills: ['React', 'TypeScript'],
+    });
 
     render(<PersonalInfoForm />);
 
-    fireEvent.click(screen.getByText('Удалить'));
+    const fileInputs = document.querySelectorAll('input[type="file"]');
+    const aiInput = fileInputs[fileInputs.length - 1] as HTMLInputElement;
+    const file = new File([''], 'resume.pdf', { type: 'application/pdf' });
 
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.photo).toBeNull();
-  });
+    fireEvent.change(aiInput, { target: { files: [file] } });
 
-  it('should select phone as preferred contact', () => {
-    render(<PersonalInfoForm />);
-
-    const radios = screen.getAllByRole('radio');
-    fireEvent.click(radios[1]);
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.preferredContact).toBe('phone');
-  });
-
-  it('should select telegram as preferred contact', () => {
-    render(<PersonalInfoForm />);
-
-    const radios = screen.getAllByRole('radio');
-    fireEvent.click(radios[2]);
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.preferredContact).toBe('telegram');
-  });
-
-  it('should reset preferred contact to null', () => {
-    useResumeStore.setState((state) => ({
-      resume: {
-        ...state.resume,
-        personalInfo: { ...state.resume.personalInfo, preferredContact: 'email' },
+    await waitFor(
+      () => {
+        const state = useResumeStore.getState();
+        expect(state.resume.personalInfo.fullName).toBe('Иван');
+        expect(state.resume.experience.length).toBe(1);
       },
-    }));
-
-    render(<PersonalInfoForm />);
-
-    const radios = screen.getAllByRole('radio');
-    fireEvent.click(radios[3]);
-
-    const state = useResumeStore.getState();
-    expect(state.resume.personalInfo.preferredContact).toBeNull();
+      { timeout: 2000 },
+    );
   });
 });

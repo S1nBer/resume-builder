@@ -21,19 +21,12 @@ export interface AiEducation {
 export interface AiResumeData {
   fullName?: string;
   position?: string;
-  personal_info?: {
-    full_name?: string;
-    email?: string;
-    phone?: string;
-    location?: string;
-  };
-  professional_objectives?: {
-    desired_position?: string;
-  };
+  email?: string;
+  phone?: string;
+  location?: string;
   experience?: AiExperience[];
   education?: AiEducation[];
   skills?: string[];
-  technical_skills?: string[];
 }
 
 export async function extractTextFromPdf(file: File): Promise<string> {
