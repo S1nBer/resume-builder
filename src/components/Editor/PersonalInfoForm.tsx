@@ -108,6 +108,7 @@ function PersonalInfoForm() {
 
       alert('Данные из PDF успешно распознаны!');
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error(error);
       alert('Ошибка при чтении PDF');
     }
@@ -126,6 +127,7 @@ function PersonalInfoForm() {
 
       const aiData: AiResumeData = await parseResumeWithAI(text);
 
+      //eslint-disable-next-line no-console
       console.log('Ответ от ИИ:', aiData);
 
       if (aiData) {
@@ -194,6 +196,7 @@ function PersonalInfoForm() {
         }
       }
     } catch (error) {
+      //eslint-disable-next-line no-console
       console.error(error);
       alert('Ошибка при обработке ИИ. Проверь консоль и вкладку Network.');
     } finally {
