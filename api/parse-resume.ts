@@ -1,5 +1,16 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { randomUUID } from 'crypto';
+import path from 'path';
+
+process.env.NODE_EXTRA_CA_CERTS = path.resolve(
+  process.cwd(),
+  'certs',
+  'russian_trusted_root_ca_pem.crt',
+);
+
+if (process.env.VERCEL !== '1') {
+  process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+}
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
