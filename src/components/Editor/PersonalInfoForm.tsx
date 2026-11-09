@@ -130,27 +130,20 @@ function PersonalInfoForm() {
 
       if (aiData) {
         updatePersonalInfo({
-          fullName: aiData.fullName || aiData.personal_info?.full_name || personalInfo.fullName,
-          position:
-            aiData.position ||
-            aiData.professional_objectives?.desired_position ||
-            personalInfo.position,
-          email: aiData.personal_info?.email || personalInfo.email,
-          phone: aiData.personal_info?.phone || personalInfo.phone,
+          fullName: aiData.fullName || personalInfo.fullName,
+          position: aiData.position || personalInfo.position,
+          email: aiData.email || personalInfo.email,
+          phone: aiData.phone || personalInfo.phone,
+          location: aiData.location || personalInfo.location,
         });
 
+        // Обновляем опыт работы
         if (aiData.experience && Array.isArray(aiData.experience)) {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
               experience: aiData.experience!.map((exp) => {
-                let descArray: string[] = [];
-                if (Array.isArray(exp.description)) {
-                  descArray = exp.description;
-                } else if (typeof exp.description === 'string') {
-                  descArray = exp.description.split(/\n|\.\s/).filter(Boolean);
-                }
-
+                const achievements = Array.isArray(exp.description) ? exp.description : [];
                 return {
                   id: generateId(),
                   company: exp.company || '',
@@ -159,14 +152,15 @@ function PersonalInfoForm() {
                   startDate: exp.startDate || '',
                   endDate: exp.endDate || '',
                   current: false,
-                  description: descArray[0] || '',
-                  achievements: descArray.slice(1),
+                  description: '',
+                  achievements: achievements,
                 };
               }),
             },
           }));
         }
 
+        // Обновляем образование
         if (aiData.education && Array.isArray(aiData.education)) {
           useResumeStore.setState((state) => ({
             resume: {
@@ -177,8 +171,8 @@ function PersonalInfoForm() {
                 degree: edu.degree || '',
                 field: edu.field || '',
                 location: '',
-                startDate: edu.start_date || edu.startDate || '',
-                endDate: edu.end_date || edu.endDate || '',
+                startDate: edu.startDate || '',
+                endDate: edu.endDate || '',
                 current: false,
                 description: '',
               })),
@@ -186,20 +180,18 @@ function PersonalInfoForm() {
           }));
         }
 
-        const skillsArray = aiData.skills || aiData.technical_skills;
-        if (skillsArray && Array.isArray(skillsArray)) {
+        // Обновляем навыки
+        if (aiData.skills && Array.isArray(aiData.skills)) {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              skills: skillsArray.map((name) => ({
+              skills: aiData.skills!.map((name) => ({
                 id: generateId(),
                 name,
               })),
             },
           }));
         }
-
-        alert('ИИ успешно распознал резюме!');
       }
     } catch (error) {
       console.error(error);
