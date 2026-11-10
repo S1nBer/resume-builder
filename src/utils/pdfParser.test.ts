@@ -56,7 +56,11 @@ describe('pdfParser', () => {
 
       const result = await parseResumeWithAI('Текст резюме');
 
-      expect(mockFetch).toHaveBeenCalledWith('/api/parse-resume', expect.any(Object));
+      // Замени старый путь на новый URL
+      expect(mockFetch).toHaveBeenCalledWith(
+        'https://d5d4h4jb75bnc1lqdq7n.764nr5vy.apigw.yandexcloud.net/parse',
+        expect.any(Object),
+      );
       expect(result).toEqual(mockData);
     });
 

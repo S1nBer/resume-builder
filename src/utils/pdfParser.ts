@@ -49,11 +49,14 @@ export async function extractTextFromPdf(file: File): Promise<string> {
 }
 
 export async function parseResumeWithAI(text: string): Promise<AiResumeData> {
-  const response = await fetch('https://d5d4h4jb75bnc1lqdq7n.764nr5vy.apigw.yandexcloud.net', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ text }),
-  });
+  const response = await fetch(
+    'https://d5d4h4jb75bnc1lqdq7n.764nr5vy.apigw.yandexcloud.net/parse',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    },
+  );
 
   if (!response.ok) {
     const errorData = await response.json();
