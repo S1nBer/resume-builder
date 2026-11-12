@@ -12,6 +12,14 @@ function ExperienceForm() {
   const removeExperience = useResumeStore((state) => state.removeExperience);
   const { t } = useTranslation();
 
+  const handleDescriptionChange = (id: string, value: string) => {
+    const lines = value.split('\n');
+    updateExperience(id, {
+      description: value,
+      achievements: lines.filter((line) => line.trim() !== ''),
+    });
+  };
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center">
@@ -52,9 +60,9 @@ function ExperienceForm() {
 
               <FormField label={t('location')}>
                 <Input
-                  value={exp.location}
+                  value={exp.location || ''}
                   onChange={(e) => updateExperience(exp.id, { location: e.target.value })}
-                  placeholder="Москва"
+                  placeholder={t('placeholderLocation')}
                 />
               </FormField>
 
@@ -90,10 +98,18 @@ function ExperienceForm() {
 
             <FormField label={t('description')}>
               <Textarea
-                value={exp.description}
-                onChange={(e) => updateExperience(exp.id, { description: e.target.value })}
+                value={exp.description || ''}
+                onChange={(e) => handleDescriptionChange(exp.id, e.target.value)}
                 placeholder={t('experiencePlaceholder')}
-                rows={4}
+                rows={5}
+              />
+            </FormField>
+
+            <FormField label={t('technologies') || 'Стек технологий'}>
+              <Input
+                value={exp.techStack || ''}
+                onChange={(e) => updateExperience(exp.id, { techStack: e.target.value })}
+                placeholder="React, TypeScript, Node.js"
               />
             </FormField>
           </div>

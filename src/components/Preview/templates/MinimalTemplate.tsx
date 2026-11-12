@@ -58,23 +58,35 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
               <div className="space-y-6">
                 {experience.map((exp) => (
                   <div key={exp.id}>
-                    <div className="flex justify-between items-baseline">
-                      <h3 className="font-medium text-gray-900">{exp.position}</h3>
-                      <span className="text-sm text-gray-500 whitespace-nowrap">
-                        {exp.startDate} - {exp.current ? t('present') : exp.endDate}
-                      </span>
+                    <div className="space-y-4">
+                      {experience.map((exp) => (
+                        <div key={exp.id}>
+                          <div className="flex justify-between items-start">
+                            <div>
+                              <h3 className="font-medium text-gray-900">{exp.position}</h3>
+                              <p className="text-gray-600">{exp.company}</p>
+                            </div>
+                            <p className="text-sm text-gray-500 whitespace-nowrap">
+                              {exp.startDate} — {exp.current ? t('present') : exp.endDate}
+                            </p>
+                          </div>
+
+                          {exp.achievements && exp.achievements.length > 0 && (
+                            <ul className="mt-2 list-disc list-inside text-sm text-gray-700 space-y-1">
+                              {exp.achievements.map((ach, i) => (
+                                <li key={i}>{ach}</li>
+                              ))}
+                            </ul>
+                          )}
+
+                          {exp.techStack && (
+                            <p className="mt-2 text-sm text-gray-600">
+                              <strong>{t('technologiesLabel')}</strong> {exp.techStack}
+                            </p>
+                          )}
+                        </div>
+                      ))}
                     </div>
-                    <p className="text-gray-600 text-sm mt-1">{exp.company}</p>
-                    {exp.description && (
-                      <p className="mt-2 text-gray-700 text-sm">{exp.description}</p>
-                    )}
-                    {exp.achievements.length > 0 && (
-                      <ul className="mt-1 list-disc list-inside text-sm text-gray-700">
-                        {exp.achievements.map((ach, i) => (
-                          <li key={i}>{ach}</li>
-                        ))}
-                      </ul>
-                    )}
                   </div>
                 ))}
               </div>
@@ -301,7 +313,18 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
               )}
             </span>
           )}
-          {/* location, country — без изменений */}
+          {personalInfo.location && (
+            <span>
+              <span className="font-medium text-gray-700">{t('contactLocation')}:</span>{' '}
+              {personalInfo.location}
+            </span>
+          )}
+          {personalInfo.country && (
+            <span>
+              <span className="font-medium text-gray-700">{t('contactCountry')}:</span>{' '}
+              {personalInfo.country}
+            </span>
+          )}
           {personalInfo.telegram && (
             <span
               className={
@@ -316,6 +339,17 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
                 </span>
               )}
             </span>
+          )}
+          {personalInfo.github && (
+            <a
+              href={personalInfo.github}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: accentColor }}
+            >
+              <span className="font-medium text-gray-700">{t('github')}:</span>{' '}
+              {personalInfo.github}
+            </a>
           )}
         </div>
       </header>

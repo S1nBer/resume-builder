@@ -88,7 +88,7 @@ export function isValidEmail(email: string): boolean {
 
 export function isValidPhone(phone: string): boolean {
   // Простая валидация телефона (можно настроить под нужный формат)
-  const phoneRegex = /^[+\d][\d\s()-]{5,}$/;
+  const phoneRegex = /^[+\d][\d\s()-]{9,}$/;
   return phoneRegex.test(phone);
 }
 

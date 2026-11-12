@@ -100,7 +100,7 @@ export const translations = {
     addProject: 'Добавить проект',
     projectName: 'Название проекта',
     projectLink: 'Ссылка на проект',
-    technologies: 'Технологии (через запятую)',
+    technologies: 'Стек',
     noProjects: 'Нет добавленных проектов',
     project: 'Проект',
     projectDescription: 'Опишите проект...',
@@ -144,7 +144,7 @@ export const translations = {
     yourName: 'Ваше имя',
     yourPosition: 'Должность',
     present: 'настоящее время',
-    technologiesLabel: 'Технологии:',
+    technologiesLabel: 'Стек:',
 
     // Подсказки в формах
     placeholderLocation: 'Москва',

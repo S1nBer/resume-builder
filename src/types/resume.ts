@@ -35,6 +35,7 @@ export interface Experience {
   current: boolean;
   description: string;
   achievements: string[];
+  techStack?: string;
 }
 
 export interface Education {
