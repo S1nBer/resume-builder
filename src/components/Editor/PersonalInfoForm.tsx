@@ -270,28 +270,29 @@ function PersonalInfoForm() {
         />
       </div>
 
-      <div className="flex justify-end mb-4">
+      <div className="flex justify-end items-center gap-3 mb-6 mt-2">
         <label className="cursor-pointer bg-blue-50 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-100 transition-colors text-sm font-medium">
           Импортировать из PDF
           <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
         </label>
+
+        <label
+          className={`cursor-pointer px-4 py-2 rounded-md transition-colors text-sm font-medium ${
+            isParsing
+              ? 'bg-blue-300 text-white cursor-not-allowed'
+              : 'bg-blue-600 text-white hover:bg-blue-700'
+          }`}
+        >
+          {isParsing ? 'ИИ анализирует...' : 'Заполнить всё с помощью ИИ'}
+          <input
+            type="file"
+            accept=".pdf"
+            onChange={handleAiParse}
+            className="hidden"
+            disabled={isParsing}
+          />
+        </label>
       </div>
-      <label
-        className={`cursor-pointer px-4 py-2 rounded-md transition-colors text-sm font-medium ${
-          isParsing
-            ? 'bg-blue-300 text-white cursor-not-allowed'
-            : 'bg-blue-600 text-white hover:bg-blue-700'
-        }`}
-      >
-        {isParsing ? 'ИИ анализирует...' : 'Заполнить всё с помощью ИИ'}
-        <input
-          type="file"
-          accept=".pdf"
-          onChange={handleAiParse}
-          className="hidden"
-          disabled={isParsing}
-        />
-      </label>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <FormField label={t('fullName')} required>
