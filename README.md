@@ -11,6 +11,7 @@ Open project: [https://s1nber.github.io/resume-builder/](https://s1nber.github.i
 ## ✨ Features
 
 - **Resume editor** — fill in all the necessary sections
+- **PDF Import (AI)** — upload a PDF resume and GigaChat will automatically fill in all fields
 - **Personal info** — name, position, contacts, photo
 - **Drag-and-drop photo** — drag an image to upload
 - **Work experience** — add unlimited work places
@@ -67,6 +68,8 @@ Open project: [https://s1nber.github.io/resume-builder/](https://s1nber.github.i
 - **@dnd-kit** — drag-and-drop
 - **ESLint** — linter
 - **Prettier** — code formatting
+- **Yandex Cloud Functions** — backend for AI processing
+- **GigaChat API (Sber)** — PDF resume parsing
 
 ## 📦 Installation
 
@@ -94,6 +97,7 @@ npm run dev
 ## ✨ Возможности
 
 - **Редактор резюме** — заполняйте все необходимые секции
+- **Импорт из PDF (ИИ)** — загрузите резюме в PDF, и GigaChat автоматически заполнит все поля
 - **Личная информация** — ФИО, должность, контакты, фото
 - **Drag-and-drop фото** — перетащите изображение для загрузки
 - **Опыт работы** — добавляйте неограниченное количество мест работы
@@ -150,6 +154,8 @@ npm run dev
 - **@dnd-kit** — drag-and-drop
 - **ESLint** — линтер
 - **Prettier** — форматирование кода
+- **Yandex Cloud Functions** — серверная часть для ИИ
+- **GigaChat API (Сбер)** — парсинг резюме из PDF
 
 ## 📦 Установка
 
