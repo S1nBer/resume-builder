@@ -2,17 +2,15 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import { randomUUID } from 'crypto';
 import path from 'path';
 
-process.env.NODE_EXTRA_CA_CERTS = path.resolve(
-  process.cwd(),
-  'certs',
-  'russian_trusted_root_ca_pem.crt',
-);
+// Указываем путь к сертификату, который лежит В КОРНЕ архива рядом с index.js
+process.env.NODE_EXTRA_CA_CERTS = path.resolve(process.cwd(), 'russian_trusted_root_ca_pem.crt');
 
+// Отключаем проверку только если мы не на Vercel (для Яндекса это сработает)
 if (process.env.VERCEL !== '1') {
   process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
 }
 
-export default async function handler(req: VercelRequest, res: VercelResponse) {
+export async function handler(req: VercelRequest, res: VercelResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
