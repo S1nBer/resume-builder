@@ -58,35 +58,30 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
               <div className="space-y-4">
                 {experience.map((exp) => (
                   <div key={exp.id}>
-                    <div className="space-y-4">
-                      {experience.map((exp) => (
-                        <div key={exp.id}>
-                          <div className="flex justify-between items-start">
-                            <div>
-                              <h3 className="font-medium text-gray-900">{exp.position}</h3>
-                              <p className="text-gray-600">{exp.company}</p>
-                            </div>
-                            <p className="text-sm text-gray-500 whitespace-nowrap">
-                              {exp.startDate} — {exp.current ? t('present') : exp.endDate}
-                            </p>
-                          </div>
-
-                          {exp.achievements && exp.achievements.length > 0 && (
-                            <ul className="mt-2 list-disc list-inside text-sm text-gray-700 space-y-1">
-                              {exp.achievements.map((ach, i) => (
-                                <li key={i}>{ach}</li>
-                              ))}
-                            </ul>
-                          )}
-
-                          {exp.techStack && (
-                            <p className="mt-2 text-sm text-gray-600">
-                              <strong>{t('technologiesLabel')}</strong> {exp.techStack}
-                            </p>
-                          )}
-                        </div>
-                      ))}
+                    <div className="flex justify-between items-baseline">
+                      <h3 className="text-lg font-semibold text-gray-900">{exp.position}</h3>
+                      <span className="text-sm text-gray-600 whitespace-nowrap">
+                        {exp.startDate} - {exp.current ? t('present') : exp.endDate}
+                      </span>
                     </div>
+                    <p className="text-gray-700 font-medium mt-1">
+                      {exp.company}
+                      {exp.location && `, ${exp.location}`}
+                    </p>
+
+                    {exp.achievements && exp.achievements.length > 0 && (
+                      <ul className="mt-2 list-disc list-inside text-sm text-gray-700 space-y-1">
+                        {exp.achievements.map((ach, i) => (
+                          <li key={i}>{ach}</li>
+                        ))}
+                      </ul>
+                    )}
+
+                    {exp.techStack && (
+                      <p className="mt-2 text-sm text-gray-600">
+                        <strong>{t('technologiesLabel')}</strong> {exp.techStack}
+                      </p>
+                    )}
                   </div>
                 ))}
               </div>
