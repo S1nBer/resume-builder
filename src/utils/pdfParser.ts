@@ -6,6 +6,7 @@ export interface AiExperience {
   startDate?: string;
   endDate?: string;
   description?: string | string[];
+  techStack?: string;
 }
 
 export interface AiEducation {
@@ -24,9 +25,12 @@ export interface AiResumeData {
   email?: string;
   phone?: string;
   location?: string;
+  telegram?: string;
+  summary?: string;
   experience?: AiExperience[];
   education?: AiEducation[];
   skills?: string[];
+  languages?: { name: string; level: string }[];
 }
 
 export async function extractTextFromPdf(file: File): Promise<string> {

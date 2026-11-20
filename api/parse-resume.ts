@@ -65,25 +65,31 @@ export async function handler(req: VercelRequest, res: VercelResponse) {
                 "email": "email@example.com",
                 "phone": "+7...",
                 "location": "Город",
+                "telegram": "@username или ссылка",
+                "summary": "Полный текст блока О себе",
                 "experience": [
                   {
                     "company": "Компания",
                     "position": "Должность",
                     "startDate": "YYYY-MM", 
                     "endDate": "YYYY-MM", 
-                    "description": ["Достижение 1", "Достижение 2", "Обязанность 3"]
+                    "description": ["Достижение 1", "Достижение 2"],
+                    "techStack": "Стек технологий (если указан в опыте)"
                   }
                 ],
                 "education": [
                   {
                     "institution": "ВУЗ",
-                    "degree": "Степень",
+                    "degree": "Степень (Высшее, Бакалавр и т.д.)",
                     "field": "Специальность",
                     "startDate": "YYYY-MM",
-                    "endDate": "YYYY-MM"
+                    "endDate": "YYYY"
                   }
                 ],
-                "skills": ["навык1", "навык2"]
+                "skills": ["навык1", "навык2"],
+                "languages": [
+                  {"name": "Английский", "level": "B2 (Средне-продвинутый)"}
+                ]
               }`,
           },
           {

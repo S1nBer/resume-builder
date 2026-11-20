@@ -137,27 +137,30 @@ function PersonalInfoForm() {
           email: aiData.email || personalInfo.email,
           phone: aiData.phone || personalInfo.phone,
           location: aiData.location || personalInfo.location,
+          telegram: aiData.telegram || personalInfo.telegram,
         });
+
+        if (aiData.summary) {
+          useResumeStore.getState().updateSummary(aiData.summary);
+        }
 
         // Обновляем опыт работы
         if (aiData.experience && Array.isArray(aiData.experience)) {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              experience: aiData.experience!.map((exp) => {
-                const achievements = Array.isArray(exp.description) ? exp.description : [];
-                return {
-                  id: generateId(),
-                  company: exp.company || '',
-                  position: exp.position || '',
-                  location: '',
-                  startDate: exp.startDate || '',
-                  endDate: exp.endDate || '',
-                  current: false,
-                  description: '',
-                  achievements: achievements,
-                };
-              }),
+              experience: aiData.experience!.map((exp) => ({
+                id: generateId(),
+                company: exp.company || '',
+                position: exp.position || '',
+                location: '',
+                startDate: exp.startDate || '',
+                endDate: exp.endDate || '',
+                current: false,
+                description: '',
+                achievements: Array.isArray(exp.description) ? exp.description : [],
+                techStack: exp.techStack || '',
+              })),
             },
           }));
         }
@@ -270,7 +273,7 @@ function PersonalInfoForm() {
         />
       </div>
 
-      <div className="flex justify-end items-center gap-3 mb-6 mt-2">
+      <div className="flex justify-between items-center gap-3 mb-6 mt-2">
         <label className="cursor-pointer bg-blue-50 text-blue-700 px-4 py-2 rounded-md hover:bg-blue-100 transition-colors text-sm font-medium">
           Импортировать из PDF
           <input type="file" accept=".pdf" onChange={handlePdfUpload} className="hidden" />
