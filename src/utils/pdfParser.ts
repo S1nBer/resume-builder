@@ -24,6 +24,8 @@ export interface AiResumeData {
   position?: string;
   email?: string;
   phone?: string;
+  birthDate?: string;
+  citizenship?: string;
   location?: string;
   telegram?: string;
   summary?: string;

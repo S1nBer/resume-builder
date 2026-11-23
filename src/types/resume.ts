@@ -5,12 +5,13 @@ export interface PersonalInfo {
   email: string;
   phone: string;
   location: string;
-  country: string;
+  citizenship: string;
+  preferredContact: 'email' | 'phone' | 'telegram' | null;
   website?: string;
   linkedin?: string;
   github?: string;
   telegram?: string;
-  preferredContact: 'email' | 'phone' | 'telegram' | null;
+  birthDate?: string;
 }
 
 export interface Skill {

@@ -322,10 +322,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
               </div>
             )}
 
-            {personalInfo.country && (
+            {personalInfo.citizenship && (
               <div>
-                <span className="font-medium text-gray-700">{t('contactCountry')}:</span>{' '}
-                <span>{personalInfo.country}</span>
+                <span className="font-medium text-gray-700">{t('citizenship')}:</span>{' '}
+                <span>{personalInfo.citizenship}</span>
               </div>
             )}
             {personalInfo.telegram && (

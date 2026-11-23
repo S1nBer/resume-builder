@@ -298,10 +298,10 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
               {personalInfo.location}
             </span>
           )}
-          {personalInfo.country && (
+          {personalInfo.citizenship && (
             <span>
-              <span className="font-medium text-gray-700">{t('contactCountry')}:</span>{' '}
-              {personalInfo.country}
+              <span className="font-medium text-gray-700">{t('citizenship')}:</span>{' '}
+              {personalInfo.citizenship}
             </span>
           )}
         </div>

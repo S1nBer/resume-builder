@@ -138,13 +138,15 @@ function PersonalInfoForm() {
           phone: aiData.phone || personalInfo.phone,
           location: aiData.location || personalInfo.location,
           telegram: aiData.telegram || personalInfo.telegram,
+          birthDate: aiData.birthDate || personalInfo.birthDate,
+          citizenship: aiData.citizenship || personalInfo.citizenship,
         });
 
         if (aiData.summary) {
           useResumeStore.getState().updateSummary(aiData.summary);
         }
 
-        // Обновляем опыт работы
+        // Опыт работы
         if (aiData.experience && Array.isArray(aiData.experience)) {
           useResumeStore.setState((state) => ({
             resume: {
@@ -165,7 +167,7 @@ function PersonalInfoForm() {
           }));
         }
 
-        // Обновляем образование
+        // Образование
         if (aiData.education && Array.isArray(aiData.education)) {
           useResumeStore.setState((state) => ({
             resume: {
@@ -176,8 +178,8 @@ function PersonalInfoForm() {
                 degree: edu.degree || '',
                 field: edu.field || '',
                 location: '',
-                startDate: edu.startDate || '',
-                endDate: edu.endDate || '',
+                startDate: edu.startDate ? `${edu.startDate}-01` : '',
+                endDate: edu.endDate ? `${edu.endDate}-01` : '',
                 current: false,
                 description: '',
               })),
@@ -185,7 +187,7 @@ function PersonalInfoForm() {
           }));
         }
 
-        // Обновляем навыки
+        // Навыки
         if (aiData.skills && Array.isArray(aiData.skills)) {
           useResumeStore.setState((state) => ({
             resume: {
@@ -197,6 +199,22 @@ function PersonalInfoForm() {
             },
           }));
         }
+
+        // Языки
+        if (aiData.languages && Array.isArray(aiData.languages)) {
+          useResumeStore.setState((state) => ({
+            resume: {
+              ...state.resume,
+              languages: aiData.languages!.map((lang) => ({
+                id: generateId(),
+                name: lang.name || '',
+                level: 'intermediate',
+              })),
+            },
+          }));
+        }
+
+        alert('ИИ успешно распознал резюме!');
       }
     } catch (error) {
       //eslint-disable-next-line no-console
@@ -309,6 +327,14 @@ function PersonalInfoForm() {
           />
         </FormField>
 
+        <FormField label={t('birthDate')}>
+          <Input
+            type="date"
+            value={personalInfo.birthDate || ''}
+            onChange={(e) => updatePersonalInfo({ birthDate: e.target.value })}
+          />
+        </FormField>
+
         <FormField label={t('position')} required>
           <Input
             value={personalInfo.position}
@@ -354,10 +380,10 @@ function PersonalInfoForm() {
           />
         </FormField>
 
-        <FormField label={t('country')}>
+        <FormField label={t('citizenship')}>
           <Input
-            value={personalInfo.country}
-            onChange={(e) => updatePersonalInfo({ country: e.target.value })}
+            value={personalInfo.citizenship}
+            onChange={(e) => updatePersonalInfo({ citizenship: e.target.value })}
             placeholder={t('placeholderCountry')}
           />
         </FormField>
