@@ -260,6 +260,9 @@ function ClassicTemplate({ resume }: ClassicTemplateProps) {
         <p className="text-xl mt-2" style={{ color: accentColor }}>
           {personalInfo.position || t('yourPosition')}
         </p>
+        {personalInfo.birthDate && (
+          <p className="text-sm text-gray-500 mt-1">Дата рождения: {personalInfo.birthDate}</p>
+        )}
 
         <div className="mt-4 flex flex-wrap justify-center gap-x-6 gap-y-2 text-sm text-gray-600">
           {personalInfo.email && (

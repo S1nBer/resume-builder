@@ -40,7 +40,7 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
               >
                 {t('aboutMe')}
               </h2>
-              <p className="text-gray-700 leading-relaxed">{summary}</p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{summary}</p>
             </section>
           )
         );
@@ -279,6 +279,10 @@ function ModernTemplate({ resume }: ModernTemplateProps) {
           <p className="text-xl mt-1" style={{ color: accentColor }}>
             {personalInfo.position || t('yourPosition')}
           </p>
+
+          {personalInfo.birthDate && (
+            <p className="text-sm text-gray-500 mt-1">Дата рождения: {personalInfo.birthDate}</p>
+          )}
 
           <div className="mt-4 space-y-1 text-sm text-gray-600">
             {personalInfo.email && (

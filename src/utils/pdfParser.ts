@@ -33,6 +33,7 @@ export interface AiResumeData {
   education?: AiEducation[];
   skills?: string[];
   languages?: { name: string; level: string }[];
+  preferredContact?: string;
 }
 
 export async function extractTextFromPdf(file: File): Promise<string> {

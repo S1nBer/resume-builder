@@ -57,7 +57,8 @@ export async function handler(req: VercelRequest, res: VercelResponse) {
         messages: [
           {
             role: 'system',
-            content: `Ты — парсер резюме. Извлеки данные и верни их СТРОГО в формате JSON без markdown-разметки.
+            content: `Ты — парсер резюме. Извлеки данные и верни их СТРОГО в формате JSON без markdown-разметки. 
+              Обрати внимание на фразу «предпочитаемый способ связи», определи, к какому контакту она относится (телефон, email, telegram) и запиши в поле preferredContact
               Используй ТОЛЬКО эти ключи:
               {
                 "fullName": "Имя Фамилия",
@@ -87,9 +88,8 @@ export async function handler(req: VercelRequest, res: VercelResponse) {
                   }
                 ],
                 "skills": ["навык1", "навык2"],
-                "languages": [
-                  {"name": "Английский", "level": "B2 (Средне-продвинутый)"}
-                ]
+                "preferredContact": "email | phone | telegram",
+                "languages": [{"name": "Русский", "level": "Родной"}]
               }`,
           },
           {

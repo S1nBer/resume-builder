@@ -40,7 +40,7 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
               >
                 {t('aboutMe')}
               </h2>
-              <p className="text-gray-700 leading-relaxed">{summary}</p>
+              <p className="text-gray-700 leading-relaxed whitespace-pre-wrap">{summary}</p>
             </section>
           )
         );
@@ -274,6 +274,9 @@ function MinimalTemplate({ resume }: MinimalTemplateProps) {
             <p className="text-lg mt-1" style={{ color: accentColor }}>
               {personalInfo.position || t('yourPosition')}
             </p>
+            {personalInfo.birthDate && (
+              <p className="text-sm text-gray-500 mt-1">Дата рождения: {personalInfo.birthDate}</p>
+            )}
           </div>
         </div>
 

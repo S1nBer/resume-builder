@@ -66,20 +66,13 @@ function EducationForm() {
                 />
               </FormField>
 
-              <div className="grid grid-cols-2 gap-4">
-                <FormField label={t('startDate')}>
-                  <Input
-                    type="month"
-                    value={edu.startDate}
-                    onChange={(e) => updateEducation(edu.id, { startDate: e.target.value })}
-                  />
-                </FormField>
-
+              <div className="grid grid-cols-1 gap-4">
                 <FormField label={t('endDate')}>
                   <Input
-                    type="month"
+                    type="text"
                     value={edu.endDate}
                     onChange={(e) => updateEducation(edu.id, { endDate: e.target.value })}
+                    placeholder="2023"
                     disabled={edu.current}
                   />
                 </FormField>

@@ -151,18 +151,28 @@ function PersonalInfoForm() {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              experience: aiData.experience!.map((exp) => ({
-                id: generateId(),
-                company: exp.company || '',
-                position: exp.position || '',
-                location: '',
-                startDate: exp.startDate || '',
-                endDate: exp.endDate || '',
-                current: false,
-                description: '',
-                achievements: Array.isArray(exp.description) ? exp.description : [],
-                techStack: exp.techStack || '',
-              })),
+              experience: aiData.experience!.map((exp) => {
+                let achArray: string[] = [];
+                if (Array.isArray(exp.description)) {
+                  achArray = exp.description;
+                } else if (typeof exp.description === 'string') {
+                  // Если пришла строка, разбиваем её по переносам строк или точкам
+                  achArray = exp.description.split(/\n/).filter((line) => line.trim() !== '');
+                }
+
+                return {
+                  id: generateId(),
+                  company: exp.company || '',
+                  position: exp.position || '',
+                  location: '',
+                  startDate: exp.startDate || '',
+                  endDate: exp.endDate || '',
+                  current: false,
+                  description: '',
+                  achievements: achArray,
+                  techStack: exp.techStack || '',
+                };
+              }),
             },
           }));
         }
@@ -178,8 +188,8 @@ function PersonalInfoForm() {
                 degree: edu.degree || '',
                 field: edu.field || '',
                 location: '',
-                startDate: edu.startDate ? `${edu.startDate}-01` : '',
-                endDate: edu.endDate ? `${edu.endDate}-01` : '',
+                startDate: '',
+                endDate: edu.endDate || '',
                 current: false,
                 description: '',
               })),
@@ -205,13 +215,45 @@ function PersonalInfoForm() {
           useResumeStore.setState((state) => ({
             resume: {
               ...state.resume,
-              languages: aiData.languages!.map((lang) => ({
-                id: generateId(),
-                name: lang.name || '',
-                level: 'intermediate',
-              })),
+              languages: aiData.languages!.map((lang) => {
+                const levelStr = (lang.level || '').toLowerCase();
+                let strictLevel: 'basic' | 'intermediate' | 'advanced' | 'native' | 'fluent' =
+                  'intermediate';
+
+                if (levelStr.includes('родной')) strictLevel = 'native';
+                else if (
+                  levelStr.includes('свобод') ||
+                  levelStr.includes('c1') ||
+                  levelStr.includes('c2')
+                )
+                  strictLevel = 'fluent';
+                else if (levelStr.includes('продвинут') || levelStr.includes('b2'))
+                  strictLevel = 'advanced';
+                else if (
+                  levelStr.includes('начальн') ||
+                  levelStr.includes('a1') ||
+                  levelStr.includes('a2')
+                )
+                  strictLevel = 'basic';
+
+                return {
+                  id: generateId(),
+                  name: lang.name || '',
+                  level: strictLevel,
+                };
+              }),
             },
           }));
+        }
+
+        if (aiData.preferredContact) {
+          const pc = aiData.preferredContact.toLowerCase();
+          let strictPC: 'email' | 'phone' | 'telegram' | null = null;
+          if (pc.includes('почт') || pc.includes('email')) strictPC = 'email';
+          if (pc.includes('телефон') || pc.includes('phone')) strictPC = 'phone';
+          if (pc.includes('telegram') || pc.includes('тг')) strictPC = 'telegram';
+
+          updatePersonalInfo({ preferredContact: strictPC });
         }
 
         alert('ИИ успешно распознал резюме!');
